@@ -7,14 +7,16 @@ class Staff(db.Model):
     
     #attributes of the table
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
+    name = db.Column(db.String, nullable=False)
+    position = db.Column(db.String)
+    username = db.Column(db.String, unique=True, nullable=False)    
     password = db.Column(db.String, nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
     
 #create schema - extends from the Schema class provided by marshmallow
 class StaffSchema(ma.Schema):
     class Meta:
-        fields = ("id", "name", "password", "is_admin")
+        fields = ("id", "name", "position", "username", "password", "is_admin")
         
 
 #define the staff_schema using the class StaffSchema:

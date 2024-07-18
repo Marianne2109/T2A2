@@ -21,6 +21,10 @@ def create_app():
     ma.init_app(app) #Marshmallow
     bcrypt.init_app(app) #Hash
     jwt.init_app(app) #Json web token
+    
+#import controllers from cli command and register the blueprints to the main app instance
+    from controllers.cli_controller import db_commands
+    app.register_blueprint(db_commands)
 
 #call the function, should return the instance of the app created   
     return app
