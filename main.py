@@ -10,7 +10,7 @@ def create_app():
 #create instance of the flask app
     app = Flask(__name__)
     
-#write configuration to connect to the database
+#write configuration to connect to the database using environment variables
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
 
 #add configuration for jwt secret key
