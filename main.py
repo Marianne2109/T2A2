@@ -25,6 +25,10 @@ def create_app():
 #import controllers from cli command and register the blueprints to the main app instance
     from controllers.cli_controller import db_commands
     app.register_blueprint(db_commands)
+    
+#import auth_controller and register the blueprints to the main app instance
+    from controllers.auth_controller import auth_bp
+    app.register_blueprint(auth_bp)
 
 #call the function, should return the instance of the app created   
     return app
