@@ -33,7 +33,7 @@ class Daily_checklistSchema(ma.Schema):
     child = fields.Nested("ChildSchema", only="name")
     
     class Meta:
-        fields = {"id", "date", "sunscreen", "sleep", "nappies", "bottles", "breakfast", "morning_tea", "lunch", "afternoon_tea", "comments", "entered_by", "child", "staff", "child"}
+        fields = {"id", "date", "sunscreen", "sleep", "nappies", "bottles", "breakfast", "morning_tea", "lunch", "afternoon_tea", "comments", "entered_by", "child", "staff"}
 
 daily_checklist_schema = Daily_checklistSchema()
 daily_checklists_schema = Daily_checklistSchema(many=True)

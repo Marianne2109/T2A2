@@ -16,9 +16,16 @@ class Child(db.Model):
     #define relationship to daily_checklist table
     daily_checklists = db.relationship("Daily_checklist", back_populates="staff")
     
+    #define relationship to parent_guardian_child junction table
+    parent_guardian_child = db.relationship("Parent_Guardian_Child", back_populates="child")
+    
 #create child schema
 class ChildSchema(ma.Schema):
+    #nested field schema - relationship to daily_checklist table
     daily_checklists = fields.List(fields.Nested("Daily_checklistSchema", exclude=["child"]))
+    
+    #nested field schema - relationship to junction table
+    parents_guardians_children = fields.List(fields.Nested("Parent_Guardian_ChildSchema", exclude=["child"]))
     
     class Meta:
         fields = {"id", "name", "dob", "room", "emergency_contact_1", "emergency_contact_2"}
