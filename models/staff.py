@@ -1,6 +1,10 @@
+
 from init import db, ma 
 
+from marshmallow import fields 
+
 #create the model Staff that extends from the SQLAlchemy class Model so the class Staff becomes a model
+#staff model will allow to create register and login staff members into the database
 class Staff(db.Model):
     #name of the table
     __tablename__ = "staff"
@@ -13,10 +17,16 @@ class Staff(db.Model):
     password = db.Column(db.String, nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
     
+    #define relationship to daily checklist table
+    daily_checklists = db.relationship("Daily_checklist", back_populates="staff")
+    
 #create schema - extends from the Schema class provided by marshmallow
 class StaffSchema(ma.Schema):
+    #indicate to marshmallow to use Daily_checklist schema, exclude staff
+    daily_checklists = fields.List(fields.Nested("Daily_checklistSchema", exclude=["staff"]))
+    
     class Meta:
-        fields = ("id", "name", "position", "username", "password", "is_admin")
+        fields = ("id", "name", "position", "username", "password", "is_admin", "daily_checklists")
         
 
 #define the staff_schema using the class StaffSchema:

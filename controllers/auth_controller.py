@@ -10,7 +10,7 @@ from models.staff import Staff, staff_schema, StaffSchema
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
-#create routes
+#create route to register staff member to the database
 @auth_bp.route("/register", methods=["POST"])
 def register_staff():
     try:    #get data from the body of the request
