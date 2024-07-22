@@ -46,10 +46,10 @@ def login_user():
     #get data from the body of the request
     body_data = request.get_json()
     
-    #find user in the database with that username
+    #find username in the database with that username
     stmt = db.select(Staff).filter_by(username=body_data.get("username")) #filter by column name
     staff = db.session.scalar(stmt)
-    #if user exists and if password is same as database - staff object fetched from database and if password matched with password hashed in database
+    #if username exists and if password is same as database - staff object fetched from database and if password matched with password hashed in database
     if staff and bcrypt.check_password_hash(staff.password, body_data.get("password")):
         #create jwt - access token will need identity, this is the staff id. Token will use timedelta for time expiry 
         token = create_access_token(identity=str(staff.id), expires_delta=timedelta(days=1))

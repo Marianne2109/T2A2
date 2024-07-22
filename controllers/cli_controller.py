@@ -6,8 +6,9 @@ from init import db, bcrypt
 from models.staff import Staff
 from models.child import Child
 from models.parent_guardian import ParentGuardian
-from models.daily_checklist import Dailychecklist
 from models.parent_guardian_child import ParentGuardianChild
+from models.daily_checklist import Dailychecklist
+
 
 db_commands = Blueprint("db", __name__)
 
@@ -127,26 +128,22 @@ def seed_tables():
         ParentGuardian(
            name="Mary Bandicoot",
            phone="0424167460",
-           email="marybandicoot@email.com",
-         #   relationship_to_child="mother"
+           email="marybandicoot@email.com"
         ),
         ParentGuardian(
            name="Carol Smith",
            phone="0456896321",
-           email="smithcarol@email.com",
-         #   relationship_to_child="mother"
+           email="smithcarol@email.com"
         ),
         ParentGuardian(
            name="Erin Kloss",
            phone="234963458",
-           email="erinkloss@email.com",
-         #   relationship_to_child="step-mother"
+           email="erinkloss@email.com"
         ),
         ParentGuardian(
            name="Luka Jones",
            phone="0495633145",
-           email="lukajones@email.com",
-         #   relationship_to_child="father"
+           email="lukajones@email.com"
         ),
    ]
    
@@ -154,38 +151,85 @@ def seed_tables():
    
    parents_guardians_children = [
         ParentGuardianChild(
-           child_id="1",
-           parent_guardian_id="1",
+           child=children[0],
+           parent_guardian=parents_guardians[0],
            relationship_to_child="mother"
         ),
         ParentGuardianChild(
-           child_id="2",
-           parent_guardian_id="1",
+           child=children[1],
+           parent_guardian=parents_guardians[0],
            relationship_to_child="mother"
         ),
         ParentGuardianChild(
-           child_id="3",
-           parent_guardian_id="2",
+           child=children[2],
+           parent_guardian=parents_guardians[1],
            relationship_to_child="mother"
         ),
         ParentGuardianChild(
-           child_id="4",
-           parent_guardian_id="2",
+           child=children[3],
+           parent_guardian=parents_guardians[1],
            relationship_to_child="mother"
         ),
         ParentGuardianChild(
-           child_id="5",
-           parent_guardian_id="4",
+           child=children[4],
+           parent_guardian=parents_guardians[3],
            relationship_to_child="father"
         ),
         ParentGuardianChild(
-           child_id="6",
-           parent_guardian_id="3",
+           child=children[5],
+         parent_guardian=parents_guardians[2],
            relationship_to_child="step-mother"
         )
    ]
    
    db.session.add_all(parents_guardians_children)
+   
+   daily_checklists = [
+      Dailychecklist(
+           child=children[0],
+           date=date.today(),
+           sunscreen="am and pm",
+           sleep="12.50pm-2pm",
+           nappies="na",
+           bottles="na",
+           breakfast="na",
+           morning_tea="all",
+           lunch="all",
+           afternoon_tea="all",
+           comments="Eve has a great day!",
+           staff=staffs[4]
+        ),
+      Dailychecklist(
+           child=children[5],
+           date=date.today(),
+           sunscreen="am and pm",
+           sleep="na",
+           nappies="na",
+           bottles="na",
+           breakfast="all",
+           morning_tea="all",
+           lunch="all",
+           afternoon_tea="all",
+           comments="Frankie loved painting outside!",
+           staff=staffs[3]
+        ),
+      Dailychecklist(
+           child=children[3],
+           date=date.today(),
+           sunscreen="na",
+           sleep="11am-12.30pm, 2.45pm-4pm",
+           nappies="2 wet, 1 soiled",
+           bottles="2",
+           breakfast="half",
+           morning_tea="all",
+           lunch="all",
+           afternoon_tea="na",
+           comments="Hunter was happy and loved story time",
+           staff=staffs[3]
+        )
+   ]
+   
+   db.session.add_all(daily_checklists)
    
    db.session.commit()
    
