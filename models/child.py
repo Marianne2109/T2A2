@@ -20,11 +20,12 @@ class Child(db.Model):
     #      return self.dob.strftime("%d/%m/%Y")
     
     
-      #define relationship to parent_guardian_child junction table (PLURAL)
+    #define relationship to parent_guardian_child junction table (PLURAL)
     parents_guardians_children = db.relationship("ParentGuardianChild", back_populates="child")
     #define relationship to daily_checklist table (plural)
     daily_checklists = db.relationship("Dailychecklist", back_populates="child")
-    
+    #define relationship to health_record(single)
+    health_record = db.relationship("HealthRecord", back_populates="child" )
   
     
 #create child schema
@@ -34,6 +35,8 @@ class ChildSchema(ma.Schema):
     
     #nested field schema - relationship to junction table
     parents_guardians_children = fields.List(fields.Nested("ParentGuardianChildSchema", exclude=["child"]))
+    
+    health_record = fields.Nested("HealthRecordSchema", exclude=["child"])
     
     class Meta:
         fields = ("id", "name", "dob", "emergency_contact_1", "emergency_contact_2")

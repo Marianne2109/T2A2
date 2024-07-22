@@ -8,6 +8,7 @@ from models.child import Child
 from models.parent_guardian import ParentGuardian
 from models.parent_guardian_child import ParentGuardianChild
 from models.daily_checklist import Dailychecklist
+from models.health_record import HealthRecord
 
 
 db_commands = Blueprint("db", __name__)
@@ -230,6 +231,65 @@ def seed_tables():
    ]
    
    db.session.add_all(daily_checklists)
+   
+   health_records = [
+      HealthRecord(
+         child=children[0],
+         immunisation_status="up to date",
+         allergies="not known",
+         health_condition="",
+         GP="Dr.Kaur at Chelsea Arcade",
+         medicare_number="4561235 1",
+         ambulance_cover="7894562K" 
+      ),
+      HealthRecord(
+         child=children[1],
+         immunisation_status="up to date",
+         allergies="peanut",
+         health_condition="anaphylaxis to peanuts",
+         GP="Dr Smith",
+         medicare_number="456236 3",
+         ambulance_cover="7894562gf"        
+      ),
+      HealthRecord(
+         child=children[2],
+         immunisation_status="missing 6 months",
+         allergies="not known",
+         health_condition="",
+         GP="Dr Griss at Family Practice Carrum",
+         medicare_number="4563254 2",
+         ambulance_cover="45628784klo"         
+      ),
+      HealthRecord(
+         child=children[3],
+         immunisation_status="up to date",
+         allergies="gluten",
+         health_condition="caeliac disease",
+         GP="Dr Griss at Family Practice Carrum",
+         medicare_number="4563254 3",
+         ambulance_cover="45628784klokk"         
+      ),
+      HealthRecord(
+         child=children[4],
+         immunisation_status="up to date",
+         allergies="no",
+         health_condition="hard of hearing, use of hearing aid",
+         GP="Dr Chen at Local medical center",
+         medicare_number="569852 1",
+         ambulance_cover="nckueghr768769"         
+      ),
+      HealthRecord(
+         child=children[5],
+         immunisation_status="up to date",
+         allergies="no",
+         health_condition="asthma",
+         GP="Dr Chen at Local medical center",
+         medicare_number="558995464",
+         ambulance_cover="65659dff"         
+      )
+      ]
+
+   db.session.add_all(health_records)
    
    db.session.commit()
    
