@@ -18,12 +18,12 @@ class Staff(db.Model):
     is_admin = db.Column(db.Boolean, default=False)
     
     #define relationship to daily checklist table
-    daily_checklists = db.relationship("Dailychecklist", back_populates="staff")
+    # daily_checklists = db.relationship("Dailychecklist", back_populates="staff")
     
 #create schema - extends from the Schema class provided by marshmallow
 class StaffSchema(ma.Schema):
     #indicate to marshmallow to use Daily_checklist schema, exclude staff
-    daily_checklists = fields.List(fields.Nested("DailychecklistSchema", exclude=["staff"]))
+    # daily_checklists = fields.List(fields.Nested("DailychecklistSchema", exclude=["staff"]))
     
     class Meta:
         fields = ("id", "name", "position", "username", "password", "is_admin", "daily_checklists")

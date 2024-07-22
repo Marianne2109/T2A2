@@ -85,43 +85,107 @@ def seed_tables():
    children = [
         Child(
          name="Eve Bandicoot",
-         dob="01-01-2021", 
+         dob="2021-01-01", 
          emergency_contact_1="Will Bandicoot",
-         emergency_contact_2="Mary Bandicoot",
+         emergency_contact_2="Mary Bandicoot"   
       ),
         Child(
          name="Rose Bandicoot",
-         dob="19-03-2023", 
+         dob="2023-03-19", 
          emergency_contact_1="Will Bandicoot",
-         emergency_contact_2="Mary Bandicoot",
+         emergency_contact_2="Mary Bandicoot"
       ),
         Child(
          name="Cooper Smith",
-         dob="26-12-2020", 
+         dob="2020-12-26", 
          emergency_contact_1="Jack Smith",
-         emergency_contact_2="Carol Smith",
+         emergency_contact_2="Carol Smith"
       ),
         Child(
          name="Hunter Smith",
-         dob="06-01-2023", 
+         dob="2023-01-06", 
          emergency_contact_1="Jack Smith",
-         emergency_contact_2="Carol Smith",
+         emergency_contact_2="Carol Smith"
       ),
         Child(
          name="Isobel Harrison",
-         dob="26-07-2022", 
+         dob="2022-07-26", 
          emergency_contact_1="Bec Harrison",
-         emergency_contact_2="Luka Jones",
+         emergency_contact_2="Luka Jones"
       ),
         Child(
          name="Frankie Kloss",
-         dob="06-05-2021", 
+         dob="2021-05-06", 
          emergency_contact_1="Erin Kloss",
-         emergency_contact_2="Sandra Kloss",
+         emergency_contact_2="Sandra Kloss"
       )        
    ]
    
    db.session.add_all(children)
+   
+   parents_guardians = [
+        ParentGuardian(
+           name="Mary Bandicoot",
+           phone="0424167460",
+           email="marybandicoot@email.com",
+         #   relationship_to_child="mother"
+        ),
+        ParentGuardian(
+           name="Carol Smith",
+           phone="0456896321",
+           email="smithcarol@email.com",
+         #   relationship_to_child="mother"
+        ),
+        ParentGuardian(
+           name="Erin Kloss",
+           phone="234963458",
+           email="erinkloss@email.com",
+         #   relationship_to_child="step-mother"
+        ),
+        ParentGuardian(
+           name="Luka Jones",
+           phone="0495633145",
+           email="lukajones@email.com",
+         #   relationship_to_child="father"
+        ),
+   ]
+   
+   db.session.add_all(parents_guardians)
+   
+   parents_guardians_children = [
+        ParentGuardianChild(
+           child_id="1",
+           parent_guardian_id="1",
+           relationship_to_child="mother"
+        ),
+        ParentGuardianChild(
+           child_id="2",
+           parent_guardian_id="1",
+           relationship_to_child="mother"
+        ),
+        ParentGuardianChild(
+           child_id="3",
+           parent_guardian_id="2",
+           relationship_to_child="mother"
+        ),
+        ParentGuardianChild(
+           child_id="4",
+           parent_guardian_id="2",
+           relationship_to_child="mother"
+        ),
+        ParentGuardianChild(
+           child_id="5",
+           parent_guardian_id="4",
+           relationship_to_child="father"
+        ),
+        ParentGuardianChild(
+           child_id="6",
+           parent_guardian_id="3",
+           relationship_to_child="step-mother"
+        )
+   ]
+   
+   db.session.add_all(parents_guardians_children)
    
    db.session.commit()
    
