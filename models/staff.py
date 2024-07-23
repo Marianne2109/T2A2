@@ -15,6 +15,7 @@ class Staff(db.Model):
     position = db.Column(db.String)
     username = db.Column(db.String, unique=True, nullable=False)    
     password = db.Column(db.String, nullable=False)
+    role = db.Column(db.String, nullable=False, default="staff")
     is_admin = db.Column(db.Boolean, default=False)
     
     #define relationship to daily checklist table
@@ -26,7 +27,7 @@ class StaffSchema(ma.Schema):
     daily_checklists = fields.List(fields.Nested("DailychecklistSchema", exclude=["staff"]))
     
     class Meta:
-        fields = ("id", "name", "position", "username", "password", "is_admin")
+        fields = ("id", "name", "position", "username", "password", "role", "is_admin")
         
 
 #define the staff_schema using the class StaffSchema:

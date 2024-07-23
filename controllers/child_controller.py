@@ -5,18 +5,19 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from init import db
 from models.child import Child, child_schema, children_schema
+from models.staff import Staff, staff_schema, staffs_schema
+from controllers.auth_controller import role_required #import role_required decorator
 
 children_bp = Blueprint("children", __name__, url_prefix="/children")
 
 #Create CRUD operations for child/children
 
-#DELETE - /children/<id> - delete a child
 #PUT, PATCH - /children/<id> - edit a child
 
 #GET - /children - fetch all children
 @children_bp.route("/")
 def get_all_children():
-    stmt = db.select(Child)
+    stmt = db.select(Child).order_by(Child.name.desc())
     children = db.session.scalars(stmt)
     return children_schema.dump(children)
 
@@ -29,10 +30,11 @@ def get_one_child(child_id):
         return child_schema.dump(child)
     else:
         return {"error": f"Child with id {child_id} not found"}, 404
+
     
 #POST - /children - create a new child
 @children_bp.route("/", methods=["POST"])
-@jwt_required()
+@role_required("admin") #only admin can create child record
 def create_child():
     body_data = request.get_json()
     child = Child(
@@ -40,11 +42,27 @@ def create_child():
         dob=body_data.get("dob"),
         emergency_contact_1=body_data.get("emergency_contact_1"),
         emergency_contact_2=body_data.get("emergency_contact_2"),
-        staff_id=get_jwt_identity()
     )
     
     db.session.add(child)
     db.session.commit()
     
     return child_schema.dump(child)
-    
+
+#DELETE - /children/<id> - delete a child
+@children_bp.route("/<int:child_id>", methods=["DELETE"])
+@role_required("admin") #only admin can delete child record
+def delete_child(child_id):
+    #fetch child info from database
+    stmt = db.select(Child).filter_by(id=child_id)
+    child = db.session.scalar(stmt)
+    #if child
+    if child:
+        #delete child
+        db.session.delete(child)
+        db.commit()
+        return {"message": f"Child '{child_id}' deleted successfully"}
+    #else
+    else:
+        #return error
+        return {"error": f"Child with id '{child_id}' not found"}, 404

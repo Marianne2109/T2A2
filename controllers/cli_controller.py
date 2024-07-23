@@ -33,7 +33,8 @@ def seed_tables():
            position="Center Manager",
            username="amandah",
            password=bcrypt.generate_password_hash("123456").decode("utf-8"),
-           is_admin=True,
+           role="admin",
+           is_admin=True
            ),
        
         Staff(
@@ -41,7 +42,8 @@ def seed_tables():
            position="Center Coordinator",
            username="caseyh",
            password=bcrypt.generate_password_hash("789789").decode("utf-8"),
-           is_admin=True,
+           role="admin",
+           is_admin=True
            ),
         
         Staff(
@@ -49,7 +51,8 @@ def seed_tables():
            position="Assistant Center Coordinator",
            username="pennyf",
            password=bcrypt.generate_password_hash("123123").decode("utf-8"),
-           is_admin=True,
+           role="admin",
+           is_admin=True
            ),   
 
         Staff(
@@ -57,6 +60,7 @@ def seed_tables():
            position="Lead Educator",
            username="sandys",
            password=bcrypt.generate_password_hash("456456").decode("utf-8"),
+           role="staff"
            ),    
 
         Staff(
@@ -64,6 +68,7 @@ def seed_tables():
            position="Educator",
            username="lak",
            password=bcrypt.generate_password_hash("456456").decode("utf-8"),
+           role="staff"
            ),
 
         Staff(
@@ -71,6 +76,7 @@ def seed_tables():
            position="Educator",
            username="tyrak",
            password=bcrypt.generate_password_hash("456456").decode("utf-8"),
+           role="staff"
            ),  
         
         Staff(
@@ -78,6 +84,7 @@ def seed_tables():
            position="Food Services",
            username="sarac",
            password=bcrypt.generate_password_hash("456456").decode("utf-8"),
+           role="staff"
            )
    ]
    
