@@ -5,20 +5,22 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from init import db
 from models.child import Child, child_schema, children_schema
-from models.staff import Staff, staff_schema, staffs_schema
 from controllers.auth_controller import role_required #import role_required decorator
+from controllers.daily_checklist_controller import daily_checklists_bp
+
 
 children_bp = Blueprint("children", __name__, url_prefix="/children")
+children_bp.register_blueprint(daily_checklists_bp)
 
 #Create CRUD operations for child/children:
-#GET - /children - fetch all children
+#GET - /children - get all children information
 @children_bp.route("/")
 def get_all_children():
     stmt = db.select(Child).order_by(Child.name.desc())
     children = db.session.scalars(stmt)
     return children_schema.dump(children)
 
-#GET - /children/<id> - fetch a single child
+#GET - /children/<id> - get a single child information
 @children_bp.route("/<int:child_id>")
 def get_one_child(child_id):
     stmt = db.select(Child).filter_by(id=child_id)

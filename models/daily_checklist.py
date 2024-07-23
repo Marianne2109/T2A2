@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date
 
 from init import db, ma
 from marshmallow import fields
