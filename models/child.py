@@ -20,12 +20,12 @@ class Child(db.Model):
     #      return self.dob.strftime("%d/%m/%Y")
     
     
-    #define relationship to parent_guardian_child junction table (PLURAL)
-    parents_guardians_children = db.relationship("ParentGuardianChild", back_populates="child")
+    #define relationship to parent_guardian_child junction table (PLURAL), cascade delete setup to automatically detele other records if child is deleted
+    parents_guardians_children = db.relationship("ParentGuardianChild", back_populates="child", cascade="all, delete-orphan")
     #define relationship to daily_checklist table (plural)
-    daily_checklists = db.relationship("Dailychecklist", back_populates="child")
+    daily_checklists = db.relationship("Dailychecklist", back_populates="child", cascade="all, delete-orphan")
     #define relationship to health_record(single)
-    health_record = db.relationship("HealthRecord", back_populates="child" )
+    health_record = db.relationship("HealthRecord", back_populates="child", cascade="all, delete-orphan")
   
     
 #create child schema

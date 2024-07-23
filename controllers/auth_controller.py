@@ -22,12 +22,12 @@ def role_required(required_role):
     def role_decorator(fn):
         @wraps(fn)
         @jwt_required()
-        def wrapper():
+        def wrapper(*args, **kwargs):
             current_staff_id = get_jwt_identity()
             current_staff = Staff.query.get(current_staff_id)
             if not current_staff or role_access.get(current_staff.role,0) < role_access.get(required_role, 0):
                 return {"error": "Access denied"}, 403
-            return fn()
+            return fn(*args, **kwargs)
         return wrapper
     return role_decorator
     
