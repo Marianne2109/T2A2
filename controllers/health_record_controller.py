@@ -9,11 +9,20 @@ from controllers.auth_controller import role_required
 #health record blueprint registered to the children_bp because it is part of a child record 
 health_records_bp = Blueprint("health_records", __name__, url_prefix="/<int:child_id>/health_records")
 
+
+@health_records_bp.route("/", methods=["GET"])
+def get_all_health_records():
+    stmt = db.select(HealthRecord).order_by(HealthRecord.id)
+    health_records = db.session.scalars(stmt)
+    return health_records_schema.dump(health_records)
+    
+    
+    
 #GET - /<int:child_id>/health_records - create a new health record
 @health_records_bp.route("/", methods=["POST"])
 @role_required("admin")
 def create_health_record(child_id):
-    body_data=request.get_json()
+    body_data = request.get_json()
     stmt = db.select(Child).filter_by(id=child_id)
     child = db.session.scalar(stmt)
     if child:
@@ -33,7 +42,7 @@ def create_health_record(child_id):
     else:
         return {"error": f"Child with id '{child_id}' not found"}, 404
     
-#DELETE
+#DELETE - /children/child_id/health_records/health_record_id
 @health_records_bp.route("/<int:health_record_id>", methods=["DELETE"])
 @role_required("admin")
 def delete_health_record(child_id, health_record_id):
@@ -46,7 +55,7 @@ def delete_health_record(child_id, health_record_id):
     else:
         return {"error": f"Health Record with id '{health_record_id}' not found"}, 404
     
-#PUT, PATCH
+#PUT, PATCH - /children/child_id/health_records/health_record_id
 @health_records_bp.route("/<int:health_record_id>", methods=["PUT", "PATCH"])
 @role_required("admin") 
 def edit_health_record(child_id, health_record_id):

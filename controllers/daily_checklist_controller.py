@@ -14,14 +14,12 @@ from controllers.auth_controller import role_required
 daily_checklists_bp = Blueprint("daily_checklists", __name__, url_prefix="/<int:child_id>/daily_checklists")
 
 #Create CRUD operations
-#Getting all the checklists wouldn't make much sense as most likely we'd need to get a checklist for a particular child. No need to create a GET method to retrieve all the checklists
-
-
-# @daily_checklists_bp.route("/", methods=["GET"])
-# def get_all_daily_checklists(daily_checklists):
-#     stmt = db.select(Dailychecklist).order_by(Dailychecklist.date.desc())
-#     daily_checklits = db.session.scalars(stmt)
-#     return daily_checklists_schema.dump(daily_checklists)
+@daily_checklists_bp.route("/", methods=["GET"])
+@jwt_required()
+def get_all_daily_checklists(child_id, daily_checklists):
+    stmt = db.select(Dailychecklist).filter_by(child_id=child_id).order_by(Dailychecklist.date.desc())
+    daily_checklits = db.session.scalars(stmt)
+    return daily_checklists_schema.dump(daily_checklists)
 
 #GET - /<int:child_id>/daily_checklists - create a new daily checklist
 @daily_checklists_bp.route("/", methods=["POST"])
@@ -37,8 +35,8 @@ def create_daily_checklist(child_id):
         staff_id = get_jwt_identity()
         #create an instance of the Dailychecklist model
         daily_checklist = Dailychecklist(
-            child_id=child.id,
-            date=date.today(),
+            child=child,
+            date=body_data.get("date"),
             sunscreen=body_data.get("sunscreen"),
             sleep=body_data.get("sleep"),
             nappies=body_data.get("nappies"),

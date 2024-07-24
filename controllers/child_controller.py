@@ -7,12 +7,14 @@ from init import db
 from models.child import Child, child_schema, children_schema
 from controllers.auth_controller import role_required #import role_required decorator
 from controllers.daily_checklist_controller import daily_checklists_bp 
-from controllers.health_record_controller import health_record_bp
+from controllers.health_record_controller import health_records_bp
 
 
 children_bp = Blueprint("children", __name__, url_prefix="/children")
-children_bp.register_blueprint(daily_checklists_bp, health_record_bp)
+children_bp.register_blueprint(daily_checklists_bp, url_prefix="/<int:child_id>/daily_checklists")
+children_bp.register_blueprint(health_records_bp, url_prefix="/<int:child_id>/health_records")
 
+#Define routes for Children
 #Create CRUD operations for child/children:
 #GET - /children - get all children
 @children_bp.route("/")
@@ -47,7 +49,7 @@ def create_child():
     db.session.add(child)
     db.session.commit()
     
-    return child_schema.dump(child)
+    return child_schema.dump(child), 201
 
 #DELETE - /children/<id> - delete a child
 @children_bp.route("/<int:child_id>", methods=["DELETE"])
