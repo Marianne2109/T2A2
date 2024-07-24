@@ -24,7 +24,7 @@ class Staff(db.Model):
 #create schema - extends from the Schema class provided by marshmallow
 class StaffSchema(ma.Schema):
     #indicate to marshmallow to use Daily_checklist schema, exclude staff
-    daily_checklists = fields.List(fields.Nested("DailychecklistSchema", exclude=["staff"]))
+    daily_checklists = fields.List(fields.Nested("DailychecklistSchema", only=["staff_id"]))
     
     class Meta:
         fields = ("id", "name", "position", "username", "password", "role", "is_admin")

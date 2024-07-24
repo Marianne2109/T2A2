@@ -13,7 +13,7 @@ children_bp = Blueprint("children", __name__, url_prefix="/children")
 children_bp.register_blueprint(daily_checklists_bp)
 
 #Create CRUD operations for child/children:
-#GET - /children - get all children information
+#GET - /children - get all children
 @children_bp.route("/")
 def get_all_children():
     stmt = db.select(Child).order_by(Child.name.desc())
