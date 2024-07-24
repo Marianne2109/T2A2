@@ -10,15 +10,25 @@ from controllers.auth_controller import role_required
 health_records_bp = Blueprint("health_records", __name__, url_prefix="/<int:child_id>/health_records")
 
 
-@health_records_bp.route("/", methods=["GET"])
-def get_all_health_records():
-    stmt = db.select(HealthRecord).order_by(HealthRecord.id)
-    health_records = db.session.scalars(stmt)
-    return health_records_schema.dump(health_records)
-    
-    
-    
-#GET - /<int:child_id>/health_records - create a new health record
+# @health_records_bp.route("/", methods=["GET"])
+# @jwt_required()
+# def get_all_health_records():
+#     stmt = db.select(HealthRecord).order_by(HealthRecord.id)
+#     health_records = db.session.scalars(stmt).all()
+#     return health_records_schema.dump(health_records)
+
+#GET - /children/<int:child_id>/health_records/<int:health_record_id> - get health record of a child    
+@health_records_bp.route("/<int:health_record_id>", methods=["GET"])
+@jwt_required()
+def get_health_record(child_id, health_record_id):
+    # stmt = db.select(HealthRecord).filter_by(child_id=child_id).order_by(HealthRecord.date.desc())
+    health_record  = db.session.query(HealthRecord).filter_by(id=health_record_id, child_id=child_id).first()
+    if health_record:
+        return health_record_schema.dump(health_record)  
+    else:
+        return {"error": f"Health Record with id '{health_record_id}' not found for child '{child_id}'"}, 404    
+ 
+#POST - /<int:child_id>/health_records - create a new health record
 @health_records_bp.route("/", methods=["POST"])
 @role_required("admin")
 def create_health_record(child_id):

@@ -18,7 +18,7 @@ daily_checklists_bp = Blueprint("daily_checklists", __name__, url_prefix="/<int:
 @jwt_required()
 def get_all_daily_checklists(child_id, daily_checklists):
     stmt = db.select(Dailychecklist).filter_by(child_id=child_id).order_by(Dailychecklist.date.desc())
-    daily_checklits = db.session.scalars(stmt)
+    daily_checklists = db.session.scalars(stmt)
     return daily_checklists_schema.dump(daily_checklists)
 
 #GET - /<int:child_id>/daily_checklists - create a new daily checklist
@@ -59,7 +59,7 @@ def create_daily_checklist(child_id):
         #return an error
         return {"error": f"Child with id '{child_id}' not found"}, 404 
     
-#DELETE - delete a daily checklist - /children/child_id/daily_checklists/daily_checklist_id
+#DELETE  - /children/child_id/daily_checklists/daily_checklist_id - delete a daily checklist
 @daily_checklists_bp.route("/<int:daily_checklist_id>", methods=["DELETE"])
 @role_required("admin")
 def delete_daily_checklist(child_id, daily_checklist_id):
@@ -68,7 +68,7 @@ def delete_daily_checklist(child_id, daily_checklist_id):
     daily_checklist = db.session.scalar(stmt)
     #if daily_checklist exists
     if daily_checklist:
-        #delete
+        #delete and commit
         db.session.delete(daily_checklist)
         db.session.commit()
         #return
@@ -77,7 +77,7 @@ def delete_daily_checklist(child_id, daily_checklist_id):
     else:
         return {"error": f"Daily Checklist with id '{daily_checklist_id}' not found"}, 404
     
-#PUT, PATCH - update/edit daily checklist - /children/child_id/daily_checklists/daily_checklist_id
+#PUT, PATCH - /children/child_id/daily_checklists/daily_checklist_id - update/edit daily checklist
 @daily_checklists_bp.route("/<int:daily_checklist_id>", methods=["PUT", "PATCH"])
 @jwt_required()
 def edit_daily_checklist(child_id, daily_checklist_id):

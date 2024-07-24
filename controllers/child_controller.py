@@ -8,11 +8,13 @@ from models.child import Child, child_schema, children_schema
 from controllers.auth_controller import role_required #import role_required decorator
 from controllers.daily_checklist_controller import daily_checklists_bp 
 from controllers.health_record_controller import health_records_bp
+from controllers.parent_guardian_controller import parents_guardians_bp
 
 
 children_bp = Blueprint("children", __name__, url_prefix="/children")
 children_bp.register_blueprint(daily_checklists_bp, url_prefix="/<int:child_id>/daily_checklists")
 children_bp.register_blueprint(health_records_bp, url_prefix="/<int:child_id>/health_records")
+children_bp.register_blueprint(parents_guardians_bp, url_prefix="/<int:child_id>/parents_guardians")
 
 #Define routes for Children
 #Create CRUD operations for child/children:
