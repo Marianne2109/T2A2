@@ -74,7 +74,7 @@ def delete_daily_checklist(child_id, daily_checklist_id):
         db.session.delete(daily_checklist)
         db.session.commit()
         #return
-        return {"message": f"Comment '{daily_checklist}' deleted successfully"}   
+        return {"message": f"Daily Checklist '{daily_checklist_id}' deleted successfully"}   
     #else
     else:
         return {"error": f"Daily Checklist with id '{daily_checklist_id}' not found"}, 404
