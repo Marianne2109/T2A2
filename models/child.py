@@ -8,7 +8,7 @@ from marshmallow import fields
 class Child(db.Model):
     __tablename__ = "child"
      
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     dob = db.Column(db.Date, nullable=False)
     emergency_contact_1 = db.Column(db.String, nullable=False)

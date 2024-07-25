@@ -91,6 +91,7 @@ def seed_tables():
    db.session.add_all(staffs)
    
    #create a list instances for Child
+   
    children = [
         Child(
          name="Eve Bandicoot",

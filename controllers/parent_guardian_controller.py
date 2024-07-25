@@ -26,7 +26,7 @@ def get_parent_guardian(child_id, parent_guardian_id):
         #return error
         return {"error": f"Parent or Guardian with id '{parent_guardian_id}' not found for child with id '{child_id}'"}, 404
     
-#GET - /children/<int:child_id>/parents_guardians - create new parent_guardian record
+#POST - /children/<int:child_id>/parents_guardians - create new parent_guardian record
 @parents_guardians_bp.route("/", methods=["POST"])
 @role_required("admin")
 def create_parent_guardian(child_id):
@@ -38,7 +38,6 @@ def create_parent_guardian(child_id):
     if child:
         #create an instance of the ParentGuardian model
         parent_guardian = ParentGuardian(
-            child=child,
             name=body_data.get("name"),
             phone=body_data.get("phone"),
             email=body_data.get("email")
@@ -53,7 +52,7 @@ def create_parent_guardian(child_id):
         #return error
         return {"error": f"Child with id '{child_id}' not found"}, 404
     
-    #DELETE - /children/child_id/parents_guardians/parent_guardian_id - delete parent_guardian record
+#DELETE - /children/child_id/parents_guardians/parent_guardian_id - delete parent_guardian record
 @parents_guardians_bp.route("/<int:parent_guardian_id>", methods=["DELETE"])
 @role_required("admin")
 def delete_parent_guardian(child_id, parent_guardian_id):

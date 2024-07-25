@@ -9,12 +9,15 @@ from controllers.auth_controller import role_required #import role_required deco
 from controllers.daily_checklist_controller import daily_checklists_bp 
 from controllers.health_record_controller import health_records_bp
 from controllers.parent_guardian_controller import parents_guardians_bp
-
+from controllers.parent_guardian_child_controller import parent_guardian_child_bp
 
 children_bp = Blueprint("children", __name__, url_prefix="/children")
+
+#register other blueprints that are related and dependent of child with the children_bp
 children_bp.register_blueprint(daily_checklists_bp, url_prefix="/<int:child_id>/daily_checklists")
 children_bp.register_blueprint(health_records_bp, url_prefix="/<int:child_id>/health_records")
 children_bp.register_blueprint(parents_guardians_bp, url_prefix="/<int:child_id>/parents_guardians")
+children_bp.register_blueprint(parent_guardian_child_bp, url_prefix="/<int:child_id>/parent_guardian_child")
 
 #Define routes for Children
 #Create CRUD operations for child/children:
