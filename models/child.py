@@ -37,12 +37,12 @@ class ChildSchema(ma.Schema):
     
     name = fields.String(required=True, validate=And(
                          Length(min=3, error="Name must be at least three characters long"), 
-                         Regexp("/^/^[a-z ,.'-]+$/i", error="Name must contain alphanumeric characters only")
+                         Regexp("^[a-z ,.'-]+$/i", error="Name must contain alphanumeric characters only")
                          ))
     dob = fields.Date(required=True, validate=validate_date_not_future)
     emergency_contact_1 = fields.String(required=True, validate=And(
                          Length(min=4, error="Name must be at least four characters long"),
-                         Regexp("/[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžæÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u", error="Name must contain alphanumeric characters only")
+                         Regexp("^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžæÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u", error="Name must contain alphanumeric characters only")
                          ))
     
     class Meta:

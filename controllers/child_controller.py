@@ -87,7 +87,7 @@ def delete_child(child_id):
 def update_child(child_id):
     #get data from body of the request
     try:
-        body_data = child_schema(request.get_json(), partial=True)
+        body_data = child_schema.load(request.get_json(), partial=True)
     except ValidationError as err:
         return{"error": err.messages}, 400
     #get child from database

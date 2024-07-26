@@ -8,12 +8,15 @@ from models.daily_checklist import Dailychecklist, daily_checklist_schema, daily
 from models.child import Child
 from models.staff import Staff
 from controllers.auth_controller import role_required
+from marshmallow.exceptions import ValidationError
+
 
 
 #daily_checklists blueprint registered to the children_bp because it is part of a child record 
 daily_checklists_bp = Blueprint("daily_checklists", __name__, url_prefix="/<int:child_id>/daily_checklists")
 
 #Create CRUD operations
+#GET - get all daily checklists for a child
 @daily_checklists_bp.route("/", methods=["GET"])
 @jwt_required()
 def get_all_daily_checklists(child_id, daily_checklists):
@@ -21,11 +24,15 @@ def get_all_daily_checklists(child_id, daily_checklists):
     daily_checklists = db.session.scalars(stmt)
     return daily_checklists_schema.dump(daily_checklists)
 
-#GET - /<int:child_id>/daily_checklists - create a new daily checklist
+#POST - /<int:child_id>/daily_checklists - create a new daily checklist
 @daily_checklists_bp.route("/", methods=["POST"])
 @jwt_required()
 def create_daily_checklist(child_id):
-    body_data = request.get_json()
+    try:
+        body_data = daily_checklist_schema.load(request.get_json())
+    except ValidationError as err:
+        return {"error": err.messages}, 400
+    
     #get the child with a particular id - child_id
     stmt = db.select(Child).filter_by(id=child_id)
     child = db.session.scalar(stmt)
@@ -81,7 +88,11 @@ def delete_daily_checklist(child_id, daily_checklist_id):
 @daily_checklists_bp.route("/<int:daily_checklist_id>", methods=["PUT", "PATCH"])
 @jwt_required()
 def edit_daily_checklist(child_id, daily_checklist_id):
-    body_data = request.get_json()
+    try:
+        body_data = daily_checklist_schema.load(request.get_json(), partial=True)
+    except ValidationError as err:
+        return {"error": err.messages}, 400
+    
     stmt = db.select(Dailychecklist).filter_by(id=daily_checklist_id)
     daily_checklist = db.session.scalar(stmt)
     if daily_checklist:

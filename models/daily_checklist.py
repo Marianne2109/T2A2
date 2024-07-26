@@ -2,6 +2,8 @@ from datetime import date
 
 from init import db, ma
 from marshmallow import fields
+from marshmallow.validate import Regexp, And, Length
+
 
 class Dailychecklist(db.Model):
     __tablename__ = "daily_checklist"
@@ -27,13 +29,32 @@ class Dailychecklist(db.Model):
     #define relationship to staff table
     staff = db.relationship("Staff", back_populates="daily_checklists")
 
-    
+alphanumeric = Regexp("r'^[A-Za-z0-9]+$", error="Include only letter and numbers.")   
     
 #create daily_checklist schema
 class DailychecklistSchema(ma.Schema):
     #indicate to marshmallow that the staff field is a nested field and to use the StaffSchema and only take name field. Same for child relationship
     child = fields.Nested("ChildSchema", only=["name"])
     staff = fields.Nested("StaffSchema", only=["name"])
+    
+    sunscreen = fields.String(required=True, validate=And(
+                              Length(max=15, error="Number of characters exceed the number [15 characters]"), alphanumeric))
+    sleep = fields.String(required=True, validate=And(
+                              Length(max=15, error="Number of characters exceed the number [15 characters]"), alphanumeric))
+    nappies = fields.String(required=True, validate=And(
+                              Length(max=20, error="Number of characters exceed the number [20 characters]"), alphanumeric))
+    bottles = fields.String(required=True, validate=And(
+                              Length(max=10, error="Number of characters exceed the number [10 characters]"), alphanumeric))
+    breakfast = fields.String(required=True, validate=And(
+                              Length(max=10, error="Number of characters exceed the number [10 characters]"), alphanumeric))
+    morning_tea = fields.String(required=True, validate=And(
+                              Length(max=10, error="Number of characters exceed the number [10 characters]"), alphanumeric))
+    lunch = fields.String(required=True, validate=And(
+                              Length(max=10, error="Number of characters exceed the number [10 characters]"), alphanumeric))
+    afternoon_tea = fields.String(required=True, validate=And(
+                              Length(max=10, error="Number of characters exceed the number [10 characters]"), alphanumeric))
+    comments = fields.String(required=True, validate=And(
+                              Length(max=50, error="Number of characters exceed the number [50 characters]"), alphanumeric))
     
     class Meta:
         fields = ("id", "child_id" "date", "sunscreen", "sleep", "nappies", "bottles", "breakfast", "morning_tea", "lunch", "afternoon_tea", "comments", "entered_by")

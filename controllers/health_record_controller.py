@@ -5,17 +5,11 @@ from init import db
 from models.health_record import HealthRecord, health_record_schema, health_records_schema
 from models.child import Child
 from controllers.auth_controller import role_required
+from marshmallow.exceptions import ValidationError
 
 #health record blueprint registered to the children_bp because it is part of a child record 
 health_records_bp = Blueprint("health_records", __name__, url_prefix="/<int:child_id>/health_records")
 
-
-# @health_records_bp.route("/", methods=["GET"])
-# @jwt_required()
-# def get_all_health_records():
-#     stmt = db.select(HealthRecord).order_by(HealthRecord.id)
-#     health_records = db.session.scalars(stmt).all()
-#     return health_records_schema.dump(health_records)
 
 #GET - /children/<int:child_id>/health_records/<int:health_record_id> - get health record of a child    
 @health_records_bp.route("/<int:health_record_id>", methods=["GET"])
@@ -32,9 +26,14 @@ def get_health_record(child_id, health_record_id):
 @health_records_bp.route("/", methods=["POST"])
 @role_required("admin")
 def create_health_record(child_id):
-    body_data = request.get_json()
+    try:
+        body_data = health_record_schema.load(request.get_json())
+    except ValidationError as err:
+        return{"error": err.messages}, 400
+    #fetch child with specific id         
     stmt = db.select(Child).filter_by(id=child_id)
     child = db.session.scalar(stmt)
+    #if child exists
     if child:
         health_record = HealthRecord(
             child_id=child.id,
@@ -69,7 +68,12 @@ def delete_health_record(child_id, health_record_id):
 @health_records_bp.route("/<int:health_record_id>", methods=["PUT", "PATCH"])
 @role_required("admin") 
 def edit_health_record(child_id, health_record_id):
-    body_data = request.get_json()
+    try:
+        body_data = health_record_schema.load(request.get_json())
+    except ValidationError as err:
+        return{"error": err.messages}, 400
+    #fetch health record           
+    body_data = health_record_schema.load(request.get_json(), partial=True)
     stmt = db.select(HealthRecord).filter_by(id=health_record_id)
     health_record = db.session.scalar(stmt)
     if health_record:
