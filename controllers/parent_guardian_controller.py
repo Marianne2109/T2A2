@@ -6,6 +6,7 @@ from models.child import Child, child_schema, children_schema
 from models.parent_guardian import ParentGuardian, parent_guardian_schema
 from models.parent_guardian_child import ParentGuardianChild
 from controllers.auth_controller import role_required #import role_required decorator
+from marshmallow.exceptions import ValidationError
 
 parents_guardians_bp = Blueprint("parents_guardians", __name__, url_prefix="/children/<int:child_id>/parents_guardians")
 
@@ -30,7 +31,7 @@ def get_parent_guardian(child_id, parent_guardian_id):
 @parents_guardians_bp.route("/", methods=["POST"])
 @role_required("admin")
 def create_parent_guardian(child_id):
-    body_data = request.get_json()
+    body_data = parent_guardian_schema.load(request.get_json())
     #fetch child with particular id - child_id
     stmt = db.select(Child).filter_by(id=child_id)
     child = db.session.scalar(stmt)
@@ -72,7 +73,7 @@ def delete_parent_guardian(child_id, parent_guardian_id):
 @parents_guardians_bp.route("/<int:parent_guardian_id>", methods=["PUT", "PATCH"])
 @role_required("admin")
 def edit_parent_guardian(child_id, parent_guardian_id):
-    body_data = request.get_json()
+    body_data = parent_guardian_schema.load(request.get_json(), partial=True)
     stmt = db.select(ParentGuardian).filter_by(id=parent_guardian_id)
     parent_guardian = db.session.scalar(stmt)
     if parent_guardian:

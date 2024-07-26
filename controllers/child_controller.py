@@ -1,15 +1,17 @@
-from datetime import date
+from datetime import datetime
 
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from init import db
+from main import validate_date_not_future
 from models.child import Child, child_schema, children_schema
 from controllers.auth_controller import role_required #import role_required decorator
 from controllers.daily_checklist_controller import daily_checklists_bp 
 from controllers.health_record_controller import health_records_bp
 from controllers.parent_guardian_controller import parents_guardians_bp
 from controllers.parent_guardian_child_controller import parent_guardian_child_bp
+from marshmallow.exceptions import ValidationError
 
 children_bp = Blueprint("children", __name__, url_prefix="/children")
 
@@ -26,7 +28,7 @@ children_bp.register_blueprint(parent_guardian_child_bp, url_prefix="/<int:child
 def get_all_children():
     stmt = db.select(Child).order_by(Child.name.desc())
     children = db.session.scalars(stmt)
-    return children_schema.dump(children)
+    return children_schema.dump(children), 200
 
 #GET - /children/<id> - get a single child information
 @children_bp.route("/<int:child_id>")
@@ -34,7 +36,7 @@ def get_one_child(child_id):
     stmt = db.select(Child).filter_by(id=child_id)
     child = db.session.scalar(stmt)
     if child:
-        return child_schema.dump(child)
+        return child_schema.dump(child), 200
     else:
         return {"error": f"Child with id {child_id} not found"}, 404
 
@@ -43,7 +45,11 @@ def get_one_child(child_id):
 @children_bp.route("/", methods=["POST"])
 @role_required("admin") #only admin can create child record
 def create_child():
-    body_data = request.get_json()
+    try:
+        body_data = child_schema.load(request.get_json())
+    except ValidationError as err:
+        return{"error": err.messages}, 400
+    
     child = Child(
         name=body_data.get("name"),
         dob=body_data.get("dob"),
@@ -80,11 +86,14 @@ def delete_child(child_id):
 @role_required("admin") #only admin can delete child record
 def update_child(child_id):
     #get data from body of the request
-    body_data = request.get_json()
+    try:
+        body_data = child_schema(request.get_json(), partial=True)
+    except ValidationError as err:
+        return{"error": err.messages}, 400
     #get child from database
     stmt = db.select(Child).filter_by(id=child_id)
     child = db.session.scalar(stmt)
-    #if child
+    #if child found
     if child:
         #update fields 
         child.name = body_data.get("name") or child.name
