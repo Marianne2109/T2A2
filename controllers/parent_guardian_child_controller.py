@@ -6,6 +6,7 @@ from models.parent_guardian_child import ParentGuardianChild, parent_guardian_ch
 from models.child import Child
 from models.parent_guardian import ParentGuardian
 from controllers.auth_controller import role_required #import role_required decorator
+from marshmallow.exceptions import ValidationError
 
 parent_guardian_child_bp = Blueprint("parent_guardian_child", __name__, url_prefix="/children/<int:child_id>/parents_guardians_children")  
 
@@ -32,11 +33,14 @@ def get_parent_guardian(child_id, parent_guardian_child_id):
 @parent_guardian_child_bp.route("/", methods=["POST"])
 @role_required("admin")
 def create_parent_guardian_child_relationship(child_id):
-    body_data = parent_guardian_child_schema.load(request.get_json())
+    try:
+        body_data = parent_guardian_child_schema.load(request.get_json())
     #fetch the child
-    child = db.session.get(Child, child_id)
-    if not child:
-        return {"error": f"Child with id '{child_id}' not found"}, 404
+        child = db.session.get(Child, child_id)
+        if not child:
+            return {"error": f"Child with id '{child_id}' not found"}, 404
+    except ValidationError as err:
+        return{"error": err.messages}, 400
     #fetch parent_guardian
     parent_guardian_id = body_data.get("parent_guardian_id")
     parent_guardian = db.session.get(ParentGuardian, parent_guardian_id)
@@ -81,5 +85,6 @@ def update_parent_guardian_child_relationship(child_id, parent_guardian_child_id
         db.session.commit()
         
         return parent_guardian_child_schema.dump(parent_guardian_child)
+    
     else:
         return {"error": f"Parent or Guardian relationship with id '{parent_guardian_child_id}' for child with id '{child_id}' not found"}, 404

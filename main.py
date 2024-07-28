@@ -45,9 +45,13 @@ def create_app():
     from controllers.auth_controller import auth_bp
     app.register_blueprint(auth_bp)
     
-#import and register card_controller/children_bp
+#import and register child_controller/children_bp
     from controllers.child_controller import children_bp
     app.register_blueprint(children_bp)
+    
+#import and register staff_controller/staffs_bp
+    from controllers.staff_controller import staffs_bp
+    app.register_blueprint(staffs_bp)
 
 #call the function, should return the instance of the app created   
     return app
