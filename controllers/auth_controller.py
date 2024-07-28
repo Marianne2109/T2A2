@@ -12,10 +12,9 @@ from utils import role_required #import role_required decorator
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
-   
-
 #create route to register staff member to the database
 @auth_bp.route("/register", methods=["POST"])
+@jwt_required()
 @role_required("admin")
 def register_staff():
     try:    #get data from the body of the request
@@ -45,9 +44,9 @@ def register_staff():
         if err.orig.pgcode == errorcodes.UNIQUE.VIOLATION:
             return {"error": "Username already in use"}, 409
 
-#login user route. Use POST request due to data in body requirements. 
+#login staff route. Use POST request due to data in body requirements. 
 @auth_bp.route("/login", methods=["POST"])
-def login_user():
+def login_staff():
     #get data from the body of the request
     body_data = request.get_json()
     
@@ -63,3 +62,51 @@ def login_user():
     #else - if the staff doesn't exist or wrong password
     else:
         return {"error": "Invalid username or password"}, 401
+    
+#delete staff login details   
+@auth_bp.route("/staffs/<int:staff_id>", methods=["DELETE"])
+@jwt_required()
+@role_required("admin")
+def delete_staff(staff_id):
+    #fetch staff with staff id from db
+    stmt = db.select(Staff).filter_by(id=staff_id)
+    staff = db.session.scalar(stmt)
+    #if staff exists
+    if staff:
+        #delete and commit
+        db.session.delete(staff)
+        db.session.commit()
+        return {"message": f"Staff with id '{staff_id}' successfully deleted"}
+    #else
+    else:
+        #return error
+        return {"error": f"Staff with id '{staff_id}' not found"}, 404
+    
+#update staff login details
+@auth_bp.route("/staffs", methods=["PUT", "PATCH"])
+@jwt_required()
+@role_required("admin")
+def update_staff():
+    #get fields from body of the request
+    body_data = StaffSchema().load(request.get_json(), partial=True)
+    password = body_data.get("password")
+    #fetch staff from db
+    stmt = db.select(Staff).filter_by(id=get_jwt_identity())
+    staff = db.session.scalar(stmt)
+    #if staff exists
+    if staff:
+        #update 
+        staff.name = body_data.get("name") or staff.name
+        staff.username = body_data.get("username") or staff.username
+        #staff password = <hashed-password> or staff.password
+        if password:
+            staff.password = bcrypt.generate_password_hash(password).decode("utf-8")
+        #commit to db
+        db.session.commit()
+        #return response
+        return staff_schema.dump(staff)
+    else:
+        #return error
+        return {"error": "Staff does not exist"}
+        
+

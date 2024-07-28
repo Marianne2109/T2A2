@@ -10,7 +10,7 @@ class Dailychecklist(db.Model):
      
     id = db.Column(db.Integer, primary_key=True)
     child_id = db.Column(db.Integer, db.ForeignKey("child.id"), nullable=False) #must belong to a child
-    date = db.Column(db.Date, nullable=False)
+    date = db.Column(db.Date, default=date.today, nullable=False)
     sunscreen = db.Column(db.String) #Ex. Applied am, applied pm, na
     sleep = db.Column(db.String) #Ex. 1 hour, half hour
     nappies = db.Column(db.String) #Ex. wet nappy changed, soiled nappy changed
@@ -29,7 +29,7 @@ class Dailychecklist(db.Model):
     #define relationship to staff table
     staff = db.relationship("Staff", back_populates="daily_checklists")
 
-alphanumeric = Regexp("r'^[A-Za-z0-9]+$", error="Include only letter and numbers.")   
+alphanumeric = Regexp("^[A-Za-z0-9]+$", error="Include only letter and numbers.")   
     
 #create daily_checklist schema
 class DailychecklistSchema(ma.Schema):
@@ -38,26 +38,26 @@ class DailychecklistSchema(ma.Schema):
     staff = fields.Nested("StaffSchema", only=["name"])
     
     sunscreen = fields.String(required=True, validate=And(
-                              Length(max=15, error="Number of characters exceed the number [15 characters]"), alphanumeric))
+                              Length(max=15, error="Number of characters exceed the limit [15 characters]"), alphanumeric))
     sleep = fields.String(required=True, validate=And(
-                              Length(max=15, error="Number of characters exceed the number [15 characters]"), alphanumeric))
+                              Length(max=15, error="Number of characters exceed the limit [15 characters]"), alphanumeric))
     nappies = fields.String(required=True, validate=And(
-                              Length(max=20, error="Number of characters exceed the number [20 characters]"), alphanumeric))
+                              Length(max=20, error="Number of characters exceed the limit [20 characters]"), alphanumeric))
     bottles = fields.String(required=True, validate=And(
-                              Length(max=10, error="Number of characters exceed the number [10 characters]"), alphanumeric))
+                              Length(max=10, error="Number of characters exceed the limit [10 characters]"), alphanumeric))
     breakfast = fields.String(required=True, validate=And(
-                              Length(max=10, error="Number of characters exceed the number [10 characters]"), alphanumeric))
+                              Length(max=10, error="Number of characters exceed the limit [10 characters]"), alphanumeric))
     morning_tea = fields.String(required=True, validate=And(
-                              Length(max=10, error="Number of characters exceed the number [10 characters]"), alphanumeric))
+                              Length(max=10, error="Number of characters exceed the limit [10 characters]"), alphanumeric))
     lunch = fields.String(required=True, validate=And(
-                              Length(max=10, error="Number of characters exceed the number [10 characters]"), alphanumeric))
+                              Length(max=10, error="Number of characters exceed the limit [10 characters]"), alphanumeric))
     afternoon_tea = fields.String(required=True, validate=And(
-                              Length(max=10, error="Number of characters exceed the number [10 characters]"), alphanumeric))
+                              Length(max=10, error="Number of characters exceed the limit [10 characters]"), alphanumeric))
     comments = fields.String(required=True, validate=And(
-                              Length(max=50, error="Number of characters exceed the number [50 characters]"), alphanumeric))
+                              Length(max=50, error="Number of characters exceed the limit [50 characters]"), alphanumeric))
     
     class Meta:
-        fields = ("id", "child_id" "date", "sunscreen", "sleep", "nappies", "bottles", "breakfast", "morning_tea", "lunch", "afternoon_tea", "comments", "entered_by")
+        fields = ("id", "child_id", "date", "sunscreen", "sleep", "nappies", "bottles", "breakfast", "morning_tea", "lunch", "afternoon_tea", "comments", "entered_by")
 
 daily_checklist_schema = DailychecklistSchema()
 daily_checklists_schema = DailychecklistSchema(many=True)

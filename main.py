@@ -32,6 +32,9 @@ def create_app():
     def validation_error(err):
         return {"error": err.messages}, 400 
     
+    @app.errorhandler(400)
+    def bad_request(err):
+        return {"error": err.messages}, 400
     
 #import controllers from cli command and register the blueprints to the main app instance
     from controllers.cli_controller import db_commands

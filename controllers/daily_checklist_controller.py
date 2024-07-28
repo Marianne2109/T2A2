@@ -43,7 +43,7 @@ def create_daily_checklist(child_id):
         #create an instance of the Dailychecklist model
         daily_checklist = Dailychecklist(
             child=child,
-            date=body_data.get("date"),
+            date=body_data.get("date", date.today()), #if not provided default date to today
             sunscreen=body_data.get("sunscreen"),
             sleep=body_data.get("sleep"),
             nappies=body_data.get("nappies"),
@@ -93,7 +93,8 @@ def edit_daily_checklist(child_id, daily_checklist_id):
     except ValidationError as err:
         return {"error": err.messages}, 400
     
-    stmt = db.select(Dailychecklist).filter_by(id=daily_checklist_id)
+    #fetch daily checklist for a specific child id
+    stmt = db.select(Dailychecklist).filter_by(id=daily_checklist_id, child_id=child_id)
     daily_checklist = db.session.scalar(stmt)
     if daily_checklist:
     #update fields

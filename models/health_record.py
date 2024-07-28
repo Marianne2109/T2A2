@@ -18,10 +18,6 @@ class HealthRecord(db.Model):
     #define relationship to child (change to - SINGLE)
     child = db.relationship("Child", back_populates="health_record")
 
-@validates("medicare_number")
-def validate_medicare_number(self, value):
-    if value != "na" and not Regexp(r'^\d{10} \d$').match(value):
-        raise ValidationError("Medicare number must be in format '1234567890 1' or 'na'")
         
 #create schema for Health Record
 class HealthRecordSchema(ma.Schema):
@@ -34,6 +30,12 @@ class HealthRecordSchema(ma.Schema):
        GP = fields.String(validate=Length(max=50))
        medicare_number = fields.String(validate=Regexp(r'^\d{10} \d$', error="Medicare number must be in format '1234567890 1' or 'na'"))
        ambulance_cover = fields.String() 
+       
+       #create validate decorator created to validate medicare card. created locally as it is only used in for health record model
+       @validates("medicare_number")
+       def validate_medicare_number(self, value):
+            if value != "na" and not Regexp(r'^\d{10} \d$').match(value):
+                raise ValidationError("Medicare number must be in format '1234567890 1' or 'na'")
                
        class Meta:
            fields = ("id", "child_id", "immunisation_status", "allergies", "health_condition", "GP", "medicare_number", "ambulance_cover")

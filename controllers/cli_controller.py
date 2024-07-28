@@ -133,6 +133,7 @@ def seed_tables():
    
    db.session.add_all(children)
    
+   #create instances for ParentGuardian
    parents_guardians = [
         ParentGuardian(
            name="Mary Bandicoot",
@@ -158,6 +159,7 @@ def seed_tables():
    
    db.session.add_all(parents_guardians)
    
+   #create instances for ParentGuardianChild
    parents_guardians_children = [
         ParentGuardianChild(
            child=children[0],
@@ -193,6 +195,7 @@ def seed_tables():
    
    db.session.add_all(parents_guardians_children)
    
+   #create instances for DailyChecklist
    daily_checklists = [
       Dailychecklist(
            child=children[0],
@@ -240,6 +243,8 @@ def seed_tables():
    
    db.session.add_all(daily_checklists)
    
+   
+   #Create instances for HealthRecord
    health_records = [
       HealthRecord(
          child=children[0],
