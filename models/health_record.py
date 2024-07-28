@@ -23,8 +23,9 @@ def validate_medicare_number(self, value):
     if value != "na" and not Regexp(r'^\d{10} \d$').match(value):
         raise ValidationError("Medicare number must be in format '1234567890 1' or 'na'")
         
-    #create schema
+#create schema for Health Record
 class HealthRecordSchema(ma.Schema):
+       #nested field - relationship to child
        child = fields.Nested("ChildSchema", only=["name"])
 
        immunisation_status = fields.String(required=True, validate=Length(min=2)) 
@@ -32,7 +33,7 @@ class HealthRecordSchema(ma.Schema):
        health_condition = fields.String(validate=Length(max=50))
        GP = fields.String(validate=Length(max=50))
        medicare_number = fields.String(validate=Regexp(r'^\d{10} \d$', error="Medicare number must be in format '1234567890 1' or 'na'"))
-       ambulance_cover = fields.String 
+       ambulance_cover = fields.String() 
                
        class Meta:
            fields = ("id", "child_id", "immunisation_status", "allergies", "health_condition", "GP", "medicare_number", "ambulance_cover")

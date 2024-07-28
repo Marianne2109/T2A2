@@ -32,7 +32,7 @@ def get_parent_guardian(child_id, parent_guardian_child_id):
 @parent_guardian_child_bp.route("/", methods=["POST"])
 @role_required("admin")
 def create_parent_guardian_child_relationship(child_id):
-    body_data = request.get_json()
+    body_data = parent_guardian_child_schema.load(request.get_json())
     #fetch the child
     child = db.session.get(Child, child_id)
     if not child:
@@ -72,7 +72,7 @@ def delete_parent_guardian_child_relationship(child_id, parent_guardian_child_id
 @parent_guardian_child_bp.route("/<int:parent_guardian_child_id>", methods=["PUT", "PATCH"])
 @role_required("admin")
 def update_parent_guardian_child_relationship(child_id, parent_guardian_child_id):
-    body_data = request.get_json()
+    body_data = parent_guardian_child_schema.load(request.get_json())
     stmt = db.select(ParentGuardianChild).filter_by(child_id=child_id, id=parent_guardian_child_id)
     parent_guardian_child =db.session.scalar(stmt)
     if parent_guardian_child:
