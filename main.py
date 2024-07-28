@@ -1,5 +1,4 @@
 import os
-from datetime import datetime
 
 from flask import Flask
 from marshmallow.exceptions import ValidationError
@@ -7,10 +6,7 @@ from marshmallow.exceptions import ValidationError
 #Import objects from init.py to connect wih the flask application
 from init import db, ma, bcrypt, jwt
 
-#create validation function for dob input not future date
-def validate_date_not_future(date):
-    if date > datetime.today().date():
-        raise ValidationError("Date of birth cannot be in the future.")
+
 
 #create application factories, we define a function that will contain the app
 def create_app():

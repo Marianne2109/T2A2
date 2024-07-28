@@ -1,5 +1,5 @@
 from datetime import timedelta
-from functools import wraps
+
 
 from flask import Blueprint, request
 from sqlalchemy.exc import IntegrityError
@@ -8,32 +8,15 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identi
 
 from init import bcrypt, db
 from models.staff import Staff, staff_schema, StaffSchema
+from utils import role_required #import role_required decorator
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
-#define role structure/hierarchy
-role_access = {
-    "admin": 2,
-    "staff": 1
-}
-
-#create decorator function for role based authorisation
-def role_required(required_role):
-    def role_decorator(fn):
-        @wraps(fn)
-        @jwt_required()
-        def wrapper(*args, **kwargs):
-            current_staff_id = get_jwt_identity()
-            current_staff = Staff.query.get(current_staff_id)
-            if not current_staff or role_access.get(current_staff.role,0) < role_access.get(required_role, 0):
-                return {"error": "Access denied"}, 403
-            return fn(*args, **kwargs)
-        return wrapper
-    return role_decorator
-    
+   
 
 #create route to register staff member to the database
 @auth_bp.route("/register", methods=["POST"])
+@role_required("admin")
 def register_staff():
     try:    #get data from the body of the request
         body_data = request.get_json()

@@ -4,9 +4,8 @@ from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from init import db
-from main import validate_date_not_future
 from models.child import Child, child_schema, children_schema
-from controllers.auth_controller import role_required #import role_required decorator
+from utils import role_required, validate_date_not_future 
 from controllers.daily_checklist_controller import daily_checklists_bp 
 from controllers.health_record_controller import health_records_bp
 from controllers.parent_guardian_controller import parents_guardians_bp

@@ -2,6 +2,7 @@
 from init import db, ma 
 
 from marshmallow import fields 
+from marshmallow.validate import Length, And, Regexp
 
 #create the model Staff that extends from the SQLAlchemy class Model so the class Staff becomes a model
 #staff model will allow to create register and login staff members into the database
@@ -23,8 +24,17 @@ class Staff(db.Model):
     
 #create schema - extends from the Schema class provided by marshmallow
 class StaffSchema(ma.Schema):
-    #indicate to marshmallow to use Daily_checklist schema, exclude staff
+    #indicate to marshmallow to use Daily_checklist schema
     daily_checklists = fields.List(fields.Nested("DailychecklistSchema", only=["staff_id"]))
+    
+    #add validation details
+    name = fields.String(required=True, validate=And(
+                         Length(min=4, error="Name must be at least four characters long"), 
+                         Regexp("^[a-z ,.'-]+$/i", error="Name must contain alphanumeric characters only")
+                         ))
+    username = fields.String(required=True, validate=Length(min=3))
+    password = fields.String(required=True, validate=Regexp("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$", error="Minimum eight characters, at least one letter and one number"))
+
     
     class Meta:
         fields = ("id", "name", "position", "username", "password", "role", "is_admin")

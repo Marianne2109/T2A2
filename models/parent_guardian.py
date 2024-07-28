@@ -20,6 +20,7 @@ class ParentGuardianSchema(ma.Schema):
     #nested field schema - relationship to junction table
     parents_guardians_children = fields.List(fields.Nested("ParentGuardianChildSchema", exclude=["parent_guardian"]))
     
+    #add validation for name, phone, email
     name = fields.String(required=True, validate=And(
                          Length(min=4, error="Name must be at least four characters long"), 
                          Regexp("^[a-z ,.'-]+$/i", error="Name must contain alphanumeric characters only")

@@ -5,6 +5,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from init import db
 from models.staff import Staff, staff_schema, staffs_schema
 from controllers.auth_controller import role_required #import role_required decorator
+from utils import is_username_unique, role_required 
 from marshmallow.exceptions import ValidationError
 
 staffs_bp = Blueprint("staffs", __name__, url_prefix="/staffs")
@@ -37,6 +38,10 @@ def create_staff():
     except ValidationError as err:
         return{"error": err.messages}, 400
     
+    #if username is not unique
+    if not is_username_unique(body_data.get("username")):
+        return{"error": "Username already exists, try a different username"}, 400
+    
     staff = Staff(
         name=body_data.get("name"),
         position=body_data.get("position"),
@@ -46,7 +51,7 @@ def create_staff():
         is_admin=body_data.get("is_admin", False)     
     )
    
-    
+    #add to the database
     db.session.add(staff)
     db.session.commit()
     

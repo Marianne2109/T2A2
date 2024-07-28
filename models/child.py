@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from init import db, ma
-from main import validate_date_not_future #Import validation function for DOB not in the future
+from utils import validate_date_not_future #Import validation function for DOB not in the future
 from marshmallow import fields 
 from marshmallow.validate import Length, And, Regexp
 

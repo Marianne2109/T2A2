@@ -5,7 +5,7 @@ from init import db
 from models.child import Child, child_schema, children_schema
 from models.parent_guardian import ParentGuardian, parent_guardian_schema
 from models.parent_guardian_child import ParentGuardianChild
-from controllers.auth_controller import role_required #import role_required decorator
+from utils import role_required #import role_required decorator
 from marshmallow.exceptions import ValidationError
 
 parents_guardians_bp = Blueprint("parents_guardians", __name__, url_prefix="/children/<int:child_id>/parents_guardians")
