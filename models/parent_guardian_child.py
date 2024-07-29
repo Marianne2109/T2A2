@@ -24,9 +24,12 @@ class ParentGuardianChild(db.Model):
     
 #create schema
 class ParentGuardianChildSchema(ma.Schema):
-
-    child = fields.Nested("ChildSchema", only=["name"])
-    parent_guardian = fields.Nested("ParentGuardianSchema", only=["name"])
+    #nested fields to include fields from the related schemas - in this case name only 
+    child = fields.Nested("ChildSchema", only=["name"], required=True)
+    parent_guardian = fields.Nested("ParentGuardianSchema", only=["name"], required=True)
+    
+    #add length validation for relationship to child
+    relationship_to_child = fields.String(required=True, validate=Length(min=3))
     
     class Meta:
         fields = ("id", "child", "parent_guardian", "relationship_to_child")

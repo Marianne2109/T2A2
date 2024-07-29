@@ -35,13 +35,15 @@ def get_parent_guardian(child_id, parent_guardian_child_id):
 def create_parent_guardian_child_relationship(child_id):
     try:
         body_data = parent_guardian_child_schema.load(request.get_json())
-    #fetch the child
-        child = db.session.get(Child, child_id)
-        if not child:
-            return {"error": f"Child with id '{child_id}' not found"}, 404
     except ValidationError as err:
         return{"error": err.messages}, 400
-    #fetch parent_guardian
+    
+    #fetch the child
+    child = db.session.get(Child, child_id)
+    if not child:
+            return {"error": f"Child with id '{child_id}' not found"}, 404
+        
+    #fetch parent/guardian
     parent_guardian_id = body_data.get("parent_guardian_id")
     parent_guardian = db.session.get(ParentGuardian, parent_guardian_id)
     if not parent_guardian:
@@ -51,7 +53,7 @@ def create_parent_guardian_child_relationship(child_id):
     parent_guardian_child = ParentGuardianChild(
         child_id=child.id,
         parent_guardian_id=parent_guardian.id,
-        relationship_to_child=body_data.get("relationship_to_child")
+        relationship_to_child=body_data.get("relationship_to_child") #Includes relationship to the child
     )
     
     db.session.add(parent_guardian_child)
