@@ -14,8 +14,6 @@ auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
 #create route to register staff member to the database
 @auth_bp.route("/register", methods=["POST"])
-@jwt_required()
-@role_required("admin")
 def register_staff():
     try:    #get data from the body of the request
         body_data = request.get_json()
@@ -41,7 +39,7 @@ def register_staff():
     except IntegrityError as err:
         if err.orig.pgcode == errorcodes.NOT_NULL_VIOLATION:
             return {"error": f"The column {err.orig.diag.column_name} is required"}, 409
-        if err.orig.pgcode == errorcodes.UNIQUE.VIOLATION:
+        if err.orig.pgcode == errorcodes.UNIQUE_VIOLATION:
             return {"error": "Username already in use"}, 409
 
 #login staff route. Use POST request due to data in body requirements. 
@@ -58,12 +56,12 @@ def login_staff():
         #create jwt - access token will need identity, this is the staff id. Token will use timedelta for time expiry 
         token = create_access_token(identity=str(staff.id), expires_delta=timedelta(days=1))
         #response back
-        return {"username": staff.username, "is_admin": staff.is_admin, "token": token}
+        return {"username": staff.username, "is_admin": staff.is_admin, "token": token}, 200
     #else - if the staff doesn't exist or wrong password
     else:
         return {"error": "Invalid username or password"}, 401
     
-#delete staff login details   
+#DELETE staff login details   
 @auth_bp.route("/staffs/<int:staff_id>", methods=["DELETE"])
 @jwt_required()
 @role_required("admin")
@@ -76,22 +74,22 @@ def delete_staff(staff_id):
         #delete and commit
         db.session.delete(staff)
         db.session.commit()
-        return {"message": f"Staff with id '{staff_id}' successfully deleted"}
+        return {"message": f"Staff with id '{staff_id}' successfully deleted"}, 200
     #else
     else:
         #return error
         return {"error": f"Staff with id '{staff_id}' not found"}, 404
     
-#update staff login details
-@auth_bp.route("/staffs", methods=["PUT", "PATCH"])
+#PUT, PATCH - update staff login details
+@auth_bp.route("/staffs/<int:staff_id>", methods=["PUT", "PATCH"])
 @jwt_required()
 @role_required("admin")
-def update_staff():
+def update_staff(staff_id):
     #get fields from body of the request
     body_data = StaffSchema().load(request.get_json(), partial=True)
     password = body_data.get("password")
     #fetch staff from db
-    stmt = db.select(Staff).filter_by(id=get_jwt_identity())
+    stmt = db.select(Staff).filter_by(id=staff_id)
     staff = db.session.scalar(stmt)
     #if staff exists
     if staff:
@@ -104,9 +102,9 @@ def update_staff():
         #commit to db
         db.session.commit()
         #return response
-        return staff_schema.dump(staff)
+        return staff_schema.dump(staff), 200
     else:
         #return error
-        return {"error": "Staff does not exist"}
+        return {"error": "Staff does not exist"}, 404
         
 

@@ -13,6 +13,7 @@ staffs_bp = Blueprint("staffs", __name__, url_prefix="/staffs")
 #GET - /staffs - fetch all staff 
 @staffs_bp.route("/", methods=["GET"])
 @jwt_required()
+@role_required("admin")
 def get_staffs():
     stmt = db.select(Staff)
     staffs = db.session.scalars(stmt).all()
@@ -21,6 +22,7 @@ def get_staffs():
 #GET - /staffs/<id> - fetch single staff info
 @staffs_bp.route("/<int:staff_id>", methods=["GET"])
 @jwt_required()
+@role_required("admin")
 def get_staff(staff_id):
     stmt = db.select(Staff).filter_by(id=staff_id)
     staff = db.session.scalar(stmt)
@@ -31,6 +33,7 @@ def get_staff(staff_id):
 
 #POST - create staff - /staffs
 @staffs_bp.route("/", methods=["POST"])
+@jwt_required()
 @role_required("admin")
 def create_staff():
     try:
@@ -59,6 +62,7 @@ def create_staff():
 
 #DELETE - delete staff - /staffs/staff_id
 @staffs_bp.route("/staffs/<int:staff_id>", methods=["DELETE"])
+@jwt_required()
 @role_required("admin")
 def delete_staff(staff_id):
      #get staff info from database
@@ -77,7 +81,8 @@ def delete_staff(staff_id):
     
 #PUT, PATCH - update staff details - /staffs/staff_id
 @staffs_bp.route("/staffs/<int:staff_id>", methods=["PUT", "PATCH"])
-@role_required("admin") #only admin can delete child record
+@jwt_required()
+@role_required("admin") 
 def update_staff(staff_id):
     #get data from body of the request
     try:

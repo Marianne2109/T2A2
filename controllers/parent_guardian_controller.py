@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
 
 from init import db
 from models.child import Child, child_schema, children_schema
@@ -14,6 +14,7 @@ parents_guardians_bp = Blueprint("parents_guardians", __name__, url_prefix="/chi
 #GET - /children/<int:child_id>/parents_guardians/<int:parent_guardian_id>
 @parents_guardians_bp.route("/<int:parent_guardian_id>", methods=["GET"])
 @jwt_required()
+@role_required("staff")
 def get_parent_guardian(child_id, parent_guardian_id):
     #join parent_guardian and parent_guardian_child to filter by child_id and parent_guardian_id
     stmt = db.select(ParentGuardian).join(ParentGuardianChild).filter(ParentGuardianChild.child_id == child_id, ParentGuardianChild.parent_guardian_id == parent_guardian_id)
@@ -29,6 +30,7 @@ def get_parent_guardian(child_id, parent_guardian_id):
     
 #POST - /children/<int:child_id>/parents_guardians - create new parent_guardian record
 @parents_guardians_bp.route("/", methods=["POST"])
+@jwt_required()
 @role_required("admin")
 def create_parent_guardian(child_id):
     body_data = parent_guardian_schema.load(request.get_json())
@@ -55,6 +57,7 @@ def create_parent_guardian(child_id):
     
 #DELETE - /children/child_id/parents_guardians/parent_guardian_id - delete parent_guardian record
 @parents_guardians_bp.route("/<int:parent_guardian_id>", methods=["DELETE"])
+@jwt_required()
 @role_required("admin")
 def delete_parent_guardian(child_id, parent_guardian_id):
     #get parent_guardian from db
@@ -71,6 +74,7 @@ def delete_parent_guardian(child_id, parent_guardian_id):
     
 #PUT, PATCH - /children/child_id/parents_guardians/parent_guardian_id - update/edit parent/guardian
 @parents_guardians_bp.route("/<int:parent_guardian_id>", methods=["PUT", "PATCH"])
+@jwt_required()
 @role_required("admin")
 def edit_parent_guardian(child_id, parent_guardian_id):
     body_data = parent_guardian_schema.load(request.get_json(), partial=True)

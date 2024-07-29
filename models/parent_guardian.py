@@ -6,7 +6,7 @@ from marshmallow.validate import Length, And, Regexp
 class ParentGuardian(db.Model):
     __tablename__ = "parent_guardian"
     
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     phone = db.Column(db.Integer, nullable=False)
     email = db.Column(db.String, nullable=False)

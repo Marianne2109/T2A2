@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
 
 from init import db
 from models.parent_guardian_child import ParentGuardianChild, parent_guardian_child_schema, parents_guardians_children_schema
@@ -13,6 +13,7 @@ parent_guardian_child_bp = Blueprint("parent_guardian_child", __name__, url_pref
 #GET - /parent_guardian - get all parent_guardian for a child
 @parent_guardian_child_bp.route("/", methods=["GET"])
 @jwt_required()
+@role_required("staff")
 def get_all_parents_guardians(child_id):
     stmt = db.select(ParentGuardianChild).filter_by(child_id=child_id)
     parents_guardians = db.session.scalars(stmt).all()
@@ -21,6 +22,7 @@ def get_all_parents_guardians(child_id):
 #GET - /parent_guardian_child/<int:id> - get particular parent_guardian relationship for a child
 @parent_guardian_child_bp.route("/<int:parent_guardian_child_id>", methods=["GET"])
 @jwt_required()
+@role_required("staff")
 def get_parent_guardian(child_id, parent_guardian_child_id):
     stmt = db.select(ParentGuardianChild).filter_by(child_id=child_id, id=parent_guardian_child_id)
     parent_guardian_child = db.session.scalar(stmt)
@@ -31,6 +33,7 @@ def get_parent_guardian(child_id, parent_guardian_child_id):
     
 #POST - /children/<int:child_id>/parents_guardians_children - create new parent_guardian_child relationship for a child
 @parent_guardian_child_bp.route("/", methods=["POST"])
+@jwt_required()
 @role_required("admin")
 def create_parent_guardian_child_relationship(child_id):
     try:
@@ -63,6 +66,7 @@ def create_parent_guardian_child_relationship(child_id):
 
 #DELETE - /children/<int:child_id>/parents_guardians_children/<int:parent_guardian_child_id> - delete parent_guardian relationship for a child
 @parent_guardian_child_bp.route("/<int:parent_guardian_child_id>", methods=["DELETE"])
+@jwt_required()
 @role_required("admin")
 def delete_parent_guardian_child_relationship(child_id, parent_guardian_child_id):
     stmt = db.select(ParentGuardianChild).filter_by(child_id=child_id, id=parent_guardian_child_id)
@@ -76,6 +80,7 @@ def delete_parent_guardian_child_relationship(child_id, parent_guardian_child_id
     
 #PUT, PATCH - /children/<int:child_id>/parents_guardians_children/<int:parent_guardian_child_id> - update/edit a parent_guardian relationship for a child
 @parent_guardian_child_bp.route("/<int:parent_guardian_child_id>", methods=["PUT", "PATCH"])
+@jwt_required()
 @role_required("admin")
 def update_parent_guardian_child_relationship(child_id, parent_guardian_child_id):
     body_data = parent_guardian_child_schema.load(request.get_json())

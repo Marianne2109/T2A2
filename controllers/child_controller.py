@@ -1,11 +1,11 @@
 from datetime import datetime
 
 from flask import Blueprint, request
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
 
 from init import db
 from models.child import Child, child_schema, children_schema
-from utils import role_required, validate_date_not_future 
+from utils import role_required
 from controllers.daily_checklist_controller import daily_checklists_bp 
 from controllers.health_record_controller import health_records_bp
 from controllers.parent_guardian_controller import parents_guardians_bp
@@ -24,6 +24,7 @@ children_bp.register_blueprint(parent_guardian_child_bp, url_prefix="/<int:child
 #Create CRUD operations for child/children:
 #GET - /children - get all children
 @children_bp.route("/")
+@jwt_required()
 def get_all_children():
     stmt = db.select(Child).order_by(Child.name.desc())
     children = db.session.scalars(stmt)
@@ -31,6 +32,7 @@ def get_all_children():
 
 #GET - /children/<id> - get a single child information
 @children_bp.route("/<int:child_id>")
+@jwt_required()
 def get_one_child(child_id):
     stmt = db.select(Child).filter_by(id=child_id)
     child = db.session.scalar(stmt)
@@ -42,6 +44,7 @@ def get_one_child(child_id):
     
 #POST - /children - create a new child
 @children_bp.route("/", methods=["POST"])
+@jwt_required()
 @role_required("admin") #only admin can create child record
 def create_child():
     try:
@@ -63,6 +66,7 @@ def create_child():
 
 #DELETE - /children/<id> - delete a child
 @children_bp.route("/<int:child_id>", methods=["DELETE"])
+@jwt_required()
 @role_required("admin") #only admin can delete child record
 def delete_child(child_id):
     #get child info from database
@@ -82,6 +86,7 @@ def delete_child(child_id):
 
 #PUT, PATCH - /children/<id> - edit a child
 @children_bp.route("/<int:child_id>", methods=["PUT", "PATCH"])
+@jwt_required()
 @role_required("admin") #only admin can delete child record
 def update_child(child_id):
     #get data from body of the request

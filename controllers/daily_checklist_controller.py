@@ -27,6 +27,7 @@ def get_all_daily_checklists(child_id, daily_checklists):
 #POST - /<int:child_id>/daily_checklists - create a new daily checklist
 @daily_checklists_bp.route("/", methods=["POST"])
 @jwt_required()
+@role_required("staff")
 def create_daily_checklist(child_id):
     try:
         body_data = daily_checklist_schema.load(request.get_json())
@@ -68,7 +69,8 @@ def create_daily_checklist(child_id):
     
 #DELETE  - /children/child_id/daily_checklists/daily_checklist_id - delete a daily checklist
 @daily_checklists_bp.route("/<int:daily_checklist_id>", methods=["DELETE"])
-@role_required("admin")
+@jwt_required()
+@role_required("staff")
 def delete_daily_checklist(child_id, daily_checklist_id):
     #get daily_checklist from db with daily_checklist is
     stmt = db.select(Dailychecklist).filter_by(id=daily_checklist_id)
@@ -87,6 +89,7 @@ def delete_daily_checklist(child_id, daily_checklist_id):
 #PUT, PATCH - /children/child_id/daily_checklists/daily_checklist_id - update/edit daily checklist
 @daily_checklists_bp.route("/<int:daily_checklist_id>", methods=["PUT", "PATCH"])
 @jwt_required()
+@role_required("staff")
 def edit_daily_checklist(child_id, daily_checklist_id):
     try:
         body_data = daily_checklist_schema.load(request.get_json(), partial=True)

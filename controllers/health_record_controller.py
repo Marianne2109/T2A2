@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
 
 from init import db
 from models.health_record import HealthRecord, health_record_schema, health_records_schema
@@ -14,6 +14,7 @@ health_records_bp = Blueprint("health_records", __name__, url_prefix="/<int:chil
 #GET - /children/<int:child_id>/health_records/<int:health_record_id> - get health record of a child    
 @health_records_bp.route("/<int:health_record_id>", methods=["GET"])
 @jwt_required()
+@role_required("staff")
 def get_health_record(child_id, health_record_id):
     # stmt = db.select(HealthRecord).filter_by(child_id=child_id).order_by(HealthRecord.date.desc())
     health_record  = db.session.query(HealthRecord).filter_by(id=health_record_id, child_id=child_id).first()
@@ -24,6 +25,7 @@ def get_health_record(child_id, health_record_id):
  
 #POST - /<int:child_id>/health_records - create a new health record
 @health_records_bp.route("/", methods=["POST"])
+@jwt_required()
 @role_required("admin")
 def create_health_record(child_id):
     try:
@@ -53,6 +55,7 @@ def create_health_record(child_id):
     
 #DELETE - /children/child_id/health_records/health_record_id
 @health_records_bp.route("/<int:health_record_id>", methods=["DELETE"])
+@jwt_required()
 @role_required("admin")
 def delete_health_record(child_id, health_record_id):
     stmt = db.select(HealthRecord).filter_by(id=health_record_id)
@@ -66,6 +69,7 @@ def delete_health_record(child_id, health_record_id):
     
 #PUT, PATCH - /children/child_id/health_records/health_record_id
 @health_records_bp.route("/<int:health_record_id>", methods=["PUT", "PATCH"])
+@jwt_required()
 @role_required("admin") 
 def edit_health_record(child_id, health_record_id):
     try:
