@@ -12,6 +12,13 @@ from utils import role_required #import role_required decorator
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
+#def function to handle integrity error
+def handle_integrity_error(err):
+        if err.orig.pgcode == errorcodes.NOT_NULL_VIOLATION:
+            return {"error": f"The column {err.orig.diag.column_name} is required"}, 409
+        if err.orig.pgcode == errorcodes.UNIQUE_VIOLATION:
+            return {"error": "Username already in use"}, 409
+
 #create route to register staff member to the database
 @auth_bp.route("/register", methods=["POST"])
 def register_staff():
@@ -37,10 +44,7 @@ def register_staff():
         return staff_schema.dump(staff), 201
     
     except IntegrityError as err:
-        if err.orig.pgcode == errorcodes.NOT_NULL_VIOLATION:
-            return {"error": f"The column {err.orig.diag.column_name} is required"}, 409
-        if err.orig.pgcode == errorcodes.UNIQUE_VIOLATION:
-            return {"error": "Username already in use"}, 409
+        return handle_integrity_error(err)
 
 #login staff route. Use POST request due to data in body requirements. 
 @auth_bp.route("/login", methods=["POST"])
@@ -85,26 +89,29 @@ def delete_staff(staff_id):
 @jwt_required()
 @role_required("admin")
 def update_staff(staff_id):
-    #get fields from body of the request
-    body_data = StaffSchema().load(request.get_json(), partial=True)
-    password = body_data.get("password")
-    #fetch staff from db
-    stmt = db.select(Staff).filter_by(id=staff_id)
-    staff = db.session.scalar(stmt)
-    #if staff exists
-    if staff:
-        #update 
-        staff.name = body_data.get("name") or staff.name
-        staff.username = body_data.get("username") or staff.username
-        #staff password = <hashed-password> or staff.password
-        if password:
-            staff.password = bcrypt.generate_password_hash(password).decode("utf-8")
-        #commit to db
-        db.session.commit()
-        #return response
-        return staff_schema.dump(staff), 200
-    else:
-        #return error
+    try:
+        #get fields from body of the request
+        body_data = StaffSchema().load(request.get_json(), partial=True)
+        password = body_data.get("password")
+        #fetch staff from db
+        stmt = db.select(Staff).filter_by(id=staff_id)
+        staff = db.session.scalar(stmt)
+        #if staff exists
+        if staff:
+            #update 
+            staff.name = body_data.get("name") or staff.name
+            staff.username = body_data.get("username") or staff.username
+            #staff password = <hashed-password> or staff.password
+            if password:
+                staff.password = bcrypt.generate_password_hash(password).decode("utf-8")
+            #commit to db
+            db.session.commit()
+            #return response
+            return staff_schema.dump(staff), 200
         return {"error": "Staff does not exist"}, 404
+    except IntegrityError as err:
+        return handle_integrity_error(err)
+
+    
         
 

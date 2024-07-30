@@ -31,7 +31,7 @@ class HealthRecordSchema(ma.Schema):
        medicare_number = fields.String(validate=Regexp(r'^\d{10} \d$', error="Medicare number must be in format '1234567890 1' or 'na'"))
        ambulance_cover = fields.String() 
        
-       #create validate decorator created to validate medicare card. created locally as it is only used in for health record model
+       #add validate decorator, created to validate medicare card input format. Implemented locally as it is only used in for health record model
        @validates("medicare_number")
        def validate_medicare_number(self, value):
             if value != "na" and not Regexp(r'^\d{10} \d$').match(value):

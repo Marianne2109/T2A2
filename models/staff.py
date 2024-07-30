@@ -13,7 +13,7 @@ class Staff(db.Model):
     #attributes of the table
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
-    position = db.Column(db.String)
+    position = db.Column(db.String, nullable=False)
     username = db.Column(db.String, unique=True, nullable=False)    
     password = db.Column(db.String, nullable=False)
     role = db.Column(db.String, nullable=False, default="staff")
@@ -26,14 +26,17 @@ class Staff(db.Model):
 class StaffSchema(ma.Schema):
     #indicate to marshmallow to use Daily_checklist schema
     daily_checklists = fields.List(fields.Nested("DailychecklistSchema", only=["staff_id"]))
-    
+        
     #add validation details
-    name = fields.String(required=True, validate=And(
-                         Length(min=4, error="Name must be at least four characters long"), 
-                         Regexp("^[a-zA-Z0-9 ]+$", error="Name must contain alphanumeric characters only")
+    name = fields.String(required=True, validate=Length(min=4, error="Name must contain minimum four characters long"))
+    username = fields.String(required=True, validate=And(
+                         Length(min=3), 
+                         Regexp("^[a-zA-Z]+$", error="Username must contain only letters and minimum three characters long")
                          ))
-    username = fields.String(required=True, validate=Length(min=3))
-    password = fields.String(required=True, validate=Regexp("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$", error="Minimum eight characters, at least one letter and one number"))
+    password = fields.String(required=True, validate=And(
+                             Length(min=6),
+                             Regexp("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$", error="Minimum six characters, at least one letter and one number")))
+    is_admin = fields.Boolean(default=False)
 
     
     class Meta:

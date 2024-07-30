@@ -25,7 +25,7 @@ def get_all_daily_checklists(child_id):
     daily_checklists = db.session.scalars(stmt)
     return daily_checklists_schema.dump(daily_checklists), 200
 
-#GET - / <int:child_id>/daily_checklists/filter_date - fetch a daily checklist for a child for a particular date
+#GET - /<int:child_id>/daily_checklists/filter_date?date= - get a daily checklist of child for a particular date by pre filtering data in the URL
 @daily_checklists_bp.route("/filter_date", methods=["GET"])
 @jwt_required()
 @role_required("staff")
@@ -44,7 +44,7 @@ def get_daily_checklist(child_id):
             return {"error": "Invalid date format. Use YYYY-MM-DD"}, 400
 
     #fetch data from daily checklist
-    stmt = db.select(Dailychecklist).filter_by(child_id=child_id, date=filter_date).first()
+    stmt = db.select(Dailychecklist).filter_by(child_id=child_id, date=filter_date)
     daily_checklist = db.session.scalar(stmt)
     #if daily checklist exists for child id and date
     if daily_checklist:

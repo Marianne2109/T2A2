@@ -29,7 +29,7 @@ class Dailychecklist(db.Model):
     #define relationship to staff table
     staff = db.relationship("Staff", back_populates="daily_checklists")
 
-alphanumeric = Regexp("^[A-Za-z0-9]+$", error="Include only letter and numbers.")   
+alphanumeric = Regexp("^[a-zA-Z0-9 ]+$", error="Include only letter and numbers.")   
     
 #create daily_checklist schema
 class DailychecklistSchema(ma.Schema):

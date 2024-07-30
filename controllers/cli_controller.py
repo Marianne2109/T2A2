@@ -208,7 +208,7 @@ def seed_tables():
            morning_tea="all",
            lunch="all",
            afternoon_tea="all",
-           comments="Eve has a great day!",
+           comments="Eve had a great day!",
            staff=staffs[4]
         ),
       Dailychecklist(
