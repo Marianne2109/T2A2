@@ -30,7 +30,7 @@ class StaffSchema(ma.Schema):
     #add validation details
     name = fields.String(required=True, validate=And(
                          Length(min=4, error="Name must be at least four characters long"), 
-                         Regexp("^[a-z ,.'-]+$/i", error="Name must contain alphanumeric characters only")
+                         Regexp("^[a-zA-Z0-9 ]+$", error="Name must contain alphanumeric characters only")
                          ))
     username = fields.String(required=True, validate=Length(min=3))
     password = fields.String(required=True, validate=Regexp("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$", error="Minimum eight characters, at least one letter and one number"))

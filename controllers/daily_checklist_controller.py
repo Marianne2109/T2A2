@@ -9,6 +9,7 @@ from models.child import Child
 from models.staff import Staff
 from controllers.auth_controller import role_required
 from marshmallow.exceptions import ValidationError
+from datetime import datetime
 
 
 
@@ -19,11 +20,38 @@ daily_checklists_bp = Blueprint("daily_checklists", __name__, url_prefix="/<int:
 #GET - get all daily checklists for a child
 @daily_checklists_bp.route("/", methods=["GET"])
 @jwt_required()
-def get_all_daily_checklists(child_id, daily_checklists):
+def get_all_daily_checklists(child_id):
     stmt = db.select(Dailychecklist).filter_by(child_id=child_id).order_by(Dailychecklist.date.desc())
     daily_checklists = db.session.scalars(stmt)
-    return daily_checklists_schema.dump(daily_checklists)
+    return daily_checklists_schema.dump(daily_checklists), 200
 
+#GET - / <int:child_id>/daily_checklists/filter_date - fetch a daily checklist for a child for a particular date
+@daily_checklists_bp.route("/filter_date", methods=["GET"])
+@jwt_required()
+@role_required("staff")
+def get_daily_checklist(child_id):
+    #get data from query
+    date_str = request.args.get("date")
+    
+    #if date is not provided
+    if not date_str:
+        return {"error": "Date is required"}, 400
+    
+    #convert date string to object 
+    try:
+        filter_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+    except ValueError:
+            return {"error": "Invalid date format. Use YYYY-MM-DD"}, 400
+
+    #fetch data from daily checklist
+    stmt = db.select(Dailychecklist).filter_by(child_id=child_id, date=filter_date).first()
+    daily_checklist = db.session.scalar(stmt)
+    #if daily checklist exists for child id and date
+    if daily_checklist:
+        return daily_checklist_schema.dump(daily_checklist), 200
+    else:
+        return {"error": f"No checklist found for child '{child_id}' on date '{filter_date}'"}
+        
 #POST - /<int:child_id>/daily_checklists - create a new daily checklist
 @daily_checklists_bp.route("/", methods=["POST"])
 @jwt_required()
