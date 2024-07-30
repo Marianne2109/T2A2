@@ -1,7 +1,7 @@
 
 from init import db, ma 
 
-from marshmallow import fields 
+from marshmallow import fields
 from marshmallow.validate import Length, And, Regexp
 
 #create the model Staff that extends from the SQLAlchemy class Model so the class Staff becomes a model
@@ -29,13 +29,15 @@ class StaffSchema(ma.Schema):
         
     #add validation details
     name = fields.String(required=True, validate=Length(min=4, error="Name must contain minimum four characters long"))
+    position = fields.String(required=True)
     username = fields.String(required=True, validate=And(
-                         Length(min=3), 
+                        Length(min=3),
                          Regexp("^[a-zA-Z]+$", error="Username must contain only letters and minimum three characters long")
                          ))
     password = fields.String(required=True, validate=And(
                              Length(min=6),
                              Regexp("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$", error="Minimum six characters, at least one letter and one number")))
+    role = fields.String(required=True)
     is_admin = fields.Boolean(default=False)
 
     
@@ -43,7 +45,7 @@ class StaffSchema(ma.Schema):
         fields = ("id", "name", "position", "username", "password", "role", "is_admin")
         
 
-#define the staff_schema using the class StaffSchema:
+#define the staff_schema is an instance of StaffSchema:
 #schema for a single staff object
 staff_schema = StaffSchema(exclude=["password"])
 

@@ -25,7 +25,6 @@ class ParentGuardianSchema(ma.Schema):
                          Length(min=4, error="Name must be at least four characters long"), 
                          Regexp("^[a-zA-Z0-9 ]+$", error="Name must contain alphanumeric characters only")
                          ))
-    phone = fields.Integer(required=True, validate=Regexp("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$", error="Invalid Format"))
     email = fields.String(required=True, validate=Regexp("^\S+@\S+\.\S+$", error="Invalid Email Format"))
 
     class Meta:

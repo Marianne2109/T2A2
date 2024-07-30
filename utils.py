@@ -32,8 +32,3 @@ def role_required(required_role):
 def validate_date_not_future(date):
     if date > datetime.today().date():
         raise ValidationError("Date of birth cannot be in the future.")
-    
-#create validation for unique username in staff model
-def is_username_unique(username):
-    stmt = db.select(Staff).filter_by(username-username)
-    return db.session.scalar(stmt) is None

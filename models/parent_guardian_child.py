@@ -18,16 +18,15 @@ class ParentGuardianChild(db.Model):
     #define relationship to child table and parent_guardian table (SINGULAR)
     child = db.relationship("Child", back_populates="parents_guardians_children")
     parent_guardian = db.relationship("ParentGuardian", back_populates="parents_guardians_children")
-    
-    #add validation for input length for relationship to child
-    relationship_to_child = fields.String(required=True, validate=Length(min=3))
-    
+
 #create schema
 class ParentGuardianChildSchema(ma.Schema):
     #nested fields to include fields from the related schemas - in this case name only 
     child = fields.Nested("ChildSchema", only=["name"], required=True)
     parent_guardian = fields.Nested("ParentGuardianSchema", only=["name"], required=True)
     
+    id = ma.auto_field()
+    child_id = ma.auto_field()
     #add length validation for relationship to child
     relationship_to_child = fields.String(required=True, validate=Length(min=3))
     

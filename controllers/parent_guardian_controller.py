@@ -11,22 +11,6 @@ from marshmallow.exceptions import ValidationError
 parents_guardians_bp = Blueprint("parents_guardians", __name__, url_prefix="/children/<int:child_id>/parents_guardians")
 
 #Define routes for parent_guardian
-#GET - /children/<int:child_id>/parents_guardians/<int:parent_guardian_id>
-@parents_guardians_bp.route("/<int:parent_guardian_id>", methods=["GET"])
-@jwt_required()
-@role_required("staff")
-def get_parent_guardian(child_id, parent_guardian_id):
-    #join parent_guardian and parent_guardian_child to filter by child_id and parent_guardian_id
-    stmt = db.select(ParentGuardian).join(ParentGuardianChild).filter(ParentGuardianChild.child_id == child_id, ParentGuardianChild.parent_guardian_id == parent_guardian_id)
-    parent_guardian = db.session.scalar(stmt)
-    #if found
-    if parent_guardian:
-        #return using parent_guardian_schema
-        return parent_guardian_schema.dump(parent_guardian)
-    #if not found
-    else:
-        #return error
-        return {"error": f"Parent or Guardian with id '{parent_guardian_id}' not found for child with id '{child_id}'"}, 404
     
 #POST - /children/<int:child_id>/parents_guardians - create new parent_guardian record
 @parents_guardians_bp.route("/", methods=["POST"])
@@ -87,7 +71,7 @@ def edit_parent_guardian(child_id, parent_guardian_id):
         
         db.session.commit()
         
-        return parent_guardian_schema.dump(parent_guardian)
+        return parent_guardian_schema.dump(parent_guardian), 201
     else:
         return {"error": f"Parent or Guardian with id '{parent_guardian_id}' not found"}, 404
 

@@ -18,8 +18,9 @@ def handle_integrity_error(err):
             return {"error": f"The column {err.orig.diag.column_name} is required"}, 409
         if err.orig.pgcode == errorcodes.UNIQUE_VIOLATION:
             return {"error": "Username already in use"}, 409
+        
 
-#create route to register staff member to the database
+#create route to register staff member to the database - this route will also handle create staff record. 
 @auth_bp.route("/register", methods=["POST"])
 def register_staff():
     try:    #get data from the body of the request
@@ -27,7 +28,10 @@ def register_staff():
         #create an instance of the staff model
         staff = Staff(
             name=body_data.get("name"),
-            username=body_data.get("username")
+            position=body_data.get("position"),
+            username=body_data.get("username"),
+            role=body_data.get("role"),
+            is_admin=body_data.get("is_admin")
         )
         #extract tha password from the body
         password=body_data.get("password")
@@ -45,6 +49,7 @@ def register_staff():
     
     except IntegrityError as err:
         return handle_integrity_error(err)
+
 
 #login staff route. Use POST request due to data in body requirements. 
 @auth_bp.route("/login", methods=["POST"])
@@ -93,21 +98,26 @@ def update_staff(staff_id):
         #get fields from body of the request
         body_data = StaffSchema().load(request.get_json(), partial=True)
         password = body_data.get("password")
-        #fetch staff from db
+        #fetch staff from the database
         stmt = db.select(Staff).filter_by(id=staff_id)
         staff = db.session.scalar(stmt)
         #if staff exists
         if staff:
-            #update 
+            #update fields provided in the request
             staff.name = body_data.get("name") or staff.name
+            staff.position=body_data.get("position") or staff.position
             staff.username = body_data.get("username") or staff.username
-            #staff password = <hashed-password> or staff.password
-            if password:
-                staff.password = bcrypt.generate_password_hash(password).decode("utf-8")
+            staff.role=body_data.get("role") or staff.role
+            staff.is_admin=body_data.get("is_admin") or staff.is_admin
+            
+            #if password if provided update and hashh
+            if password in body_data:
+                staff.password = bcrypt.generate_password_hash(body_data["password"]).decode("utf-8")
             #commit to db
             db.session.commit()
             #return response
             return staff_schema.dump(staff), 200
+        #return error if staff does not exist
         return {"error": "Staff does not exist"}, 404
     except IntegrityError as err:
         return handle_integrity_error(err)

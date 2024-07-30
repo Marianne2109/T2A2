@@ -32,7 +32,7 @@ def seed_tables():
            name="Amanda Harrison",
            position="Center Manager",
            username="amandah",
-           password=bcrypt.generate_password_hash("123456").decode("utf-8"),
+           password=bcrypt.generate_password_hash("123456a").decode("utf-8"),
            role="admin",
            is_admin=True
            ),
@@ -41,7 +41,7 @@ def seed_tables():
            name="Casey Hendrics",
            position="Center Coordinator",
            username="caseyh",
-           password=bcrypt.generate_password_hash("789789").decode("utf-8"),
+           password=bcrypt.generate_password_hash("789789c").decode("utf-8"),
            role="admin",
            is_admin=True
            ),
@@ -50,7 +50,7 @@ def seed_tables():
            name="Penny Fisherman",
            position="Assistant Center Coordinator",
            username="pennyf",
-           password=bcrypt.generate_password_hash("123123").decode("utf-8"),
+           password=bcrypt.generate_password_hash("123123p").decode("utf-8"),
            role="admin",
            is_admin=True
            ),   
@@ -59,7 +59,7 @@ def seed_tables():
            name="Sandy Salas",
            position="Lead Educator",
            username="sandys",
-           password=bcrypt.generate_password_hash("456456").decode("utf-8"),
+           password=bcrypt.generate_password_hash("456456s").decode("utf-8"),
            role="staff"
            ),    
 
@@ -67,7 +67,7 @@ def seed_tables():
            name="La Karp",
            position="Educator",
            username="lak",
-           password=bcrypt.generate_password_hash("456456").decode("utf-8"),
+           password=bcrypt.generate_password_hash("456456l").decode("utf-8"),
            role="staff"
            ),
 
@@ -75,7 +75,7 @@ def seed_tables():
            name="Tyra King",
            position="Educator",
            username="tyrak",
-           password=bcrypt.generate_password_hash("456456").decode("utf-8"),
+           password=bcrypt.generate_password_hash("456456t").decode("utf-8"),
            role="staff"
            ),  
         
@@ -83,7 +83,7 @@ def seed_tables():
            name="Sara Clark",
            position="Food Services",
            username="sarac",
-           password=bcrypt.generate_password_hash("456456").decode("utf-8"),
+           password=bcrypt.generate_password_hash("456456c").decode("utf-8"),
            role="staff"
            )
    ]

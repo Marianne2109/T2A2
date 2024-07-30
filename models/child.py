@@ -44,10 +44,8 @@ class ChildSchema(ma.Schema):
     dob = fields.Date(required=True, validate=validate_date_not_future)
     
     #add validation for length and alphanumeric values for emergency_contact
-    emergency_contact_1 = fields.String(required=True, validate=And(
-                         Length(min=4, error="Name must be at least four characters long"),
-                         Regexp("^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžæÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u", error="Name must contain alphanumeric characters only")
-                         ))
+    emergency_contact_1 = fields.String(required=True, validate=
+                         Length(min=4, error="Name must be at least four characters long"))
     
     class Meta:
         fields = ("id", "name", "dob", "emergency_contact_1", "emergency_contact_2")

@@ -8,26 +8,19 @@ from models.parent_guardian import ParentGuardian
 from utils import role_required #import role_required decorator
 from marshmallow.exceptions import ValidationError
 
+
 parent_guardian_child_bp = Blueprint("parent_guardian_child", __name__, url_prefix="/children/<int:child_id>/parents_guardians_children")  
 
-#GET - /parent_guardian - get all parent_guardian for a child
-@parent_guardian_child_bp.route("/", methods=["GET"])
-@jwt_required()
-@role_required("staff")
-def get_all_parents_guardians(child_id):
-    stmt = db.select(ParentGuardianChild).filter_by(child_id=child_id)
-    parents_guardians = db.session.scalars(stmt).all()
-    return parents_guardians_children_schema.dump(parents_guardians)
 
-#GET - /parent_guardian_child/<int:id> - get particular parent_guardian relationship for a child
+#GET - /parent_guardian_child/<int:id> - get particular parent_guardian relationship 
 @parent_guardian_child_bp.route("/<int:parent_guardian_child_id>", methods=["GET"])
 @jwt_required()
 @role_required("staff")
 def get_parent_guardian(child_id, parent_guardian_child_id):
-    stmt = db.select(ParentGuardianChild).filter_by(child_id=child_id, id=parent_guardian_child_id)
+    stmt = db.select(ParentGuardianChild).filter_by(id=parent_guardian_child_id, child_id=child_id)
     parent_guardian_child = db.session.scalar(stmt)
     if parent_guardian_child:
-        return parent_guardian_child_schema.dump(parent_guardian_child)
+        return parent_guardian_child_schema.dump(parent_guardian_child), 201
     else:
         return {"error": f"Parent or Guardian relationship with id '{parent_guardian_child_id}' for child with id '{child_id}' not found"},  404
     
@@ -40,7 +33,7 @@ def create_parent_guardian_child_relationship(child_id):
         body_data = parent_guardian_child_schema.load(request.get_json())
     except ValidationError as err:
         return{"error": err.messages}, 400
-    
+
     #fetch the child
     child = db.session.get(Child, child_id)
     if not child:
@@ -56,13 +49,15 @@ def create_parent_guardian_child_relationship(child_id):
     parent_guardian_child = ParentGuardianChild(
         child_id=child.id,
         parent_guardian_id=parent_guardian.id,
-        relationship_to_child=body_data.get("relationship_to_child") #Includes relationship to the child
+        relationship_to_child=body_data.get["relationship_to_child"] #Includes relationship to the child
     )
     
     db.session.add(parent_guardian_child)
     db.session.commit()
     
     return parent_guardian_child_schema.dump(parent_guardian_child), 201
+
+
 
 #DELETE - /children/<int:child_id>/parents_guardians_children/<int:parent_guardian_child_id> - delete parent_guardian relationship for a child
 @parent_guardian_child_bp.route("/<int:parent_guardian_child_id>", methods=["DELETE"])
