@@ -1,10 +1,10 @@
 # API Web Server Application
 
 ## Link
-- GitHub repo:
-- Trello board: ![Trello](https://trello.com/b/zp0dHkrS/a2t2-api-webserver)
+- GitHub repo: 
+- Trello board: [Trello](https://trello.com/b/zp0dHkrS/a2t2-api-webserver)
   
-###How to use
+### How to use
 To operate this application follow the next steps:
 1. Open the src folder in the Terminal
 2. Create and launch a virtual enviroment for the application with the following command
@@ -24,8 +24,10 @@ To operate this application follow the next steps:
 6. Create a .env file in the root directory and copy the variables from .envsample file into it
  * Set your own secret key, database URL with childcare_db and the username staff_childcare on your machine
    
-    ```DATABASE_URI= "postgresql+psycopg2://{your_postgres_user}:{passowrd_of_user}@localhost:5000/{your_database}"
-     JWT_SECRET_KEY="secret" ```
+    ```
+    DATABASE_URI= "postgresql+psycopg2://{your_postgres_user}:{passowrd_of_user}@localhost:5000/{your_database}"
+     JWT_SECRET_KEY="secret"
+    ```
     
 7. To create the database run `flask db create`
 8. To seed the data from CLI commands into the database run `flask db seed`
@@ -41,7 +43,7 @@ This app will create a keep record for each child's details, their carers detail
 Child Care Centers of varying sizes use third party softwares to support the management of the centre and to collect data that can be used for mandatory reporting to the State or Territory and Federal Government. The use of these platforms has a significant cost that at times small centres struggle to cover. Having a simple web application can assist with the overall efficiency of the centres’ management while assisting with data collection and data that can be extrapolated and used to secure funding (“Early Childhood Education and Care: Unit record level NMDS 2021)
 
 ## R2. Describe the way tasks are allocated and tracked in your project. 
-For project management and task tracking I used ![Trello](https://trello.com/b/zp0dHkrS/a2t2-api-webserver)
+For project management and task tracking I used [Trello](https://trello.com/b/zp0dHkrS/a2t2-api-webserver)
 I divided the tasks into 5 categories:
 * Backlog
 * To do
@@ -51,6 +53,17 @@ I divided the tasks into 5 categories:
 
 For each category I created cards and checklists within. The process was fluid and when I identified the need some elements in the checklists were transformed into its own card. I regularly updated these cards and checklists by adding items or ticking and unticking as I progressed through each task. I also made comments when needed to keep track of the progress or blocks along the way. At times I worked across elements in different cards which I expected to happen given that I was working by myself. I often referred back to the trello board to check for progress and task management.
 I used a Kanban template from Trello that I edited to suit my project needs. Some of examples of the cards created in the photos below.
+
+![Trello Board](https://github.com/Marianne2109/T2A2/blob/main/docs/Trello%20.png)
+
+
+![Trello Models](https://github.com/Marianne2109/T2A2/blob/main/docs/trello%20create%20models.png)
+
+
+![Trello Board](https://github.com/Marianne2109/T2A2/blob/main/docs/Trello%20-%20create%20controllers%20card.png)
+
+
+![Trello Board](https://github.com/Marianne2109/T2A2/blob/main/docs/trello%20-done.png)
 
 ## R3. List and explain the third-party services, packages and dependencies used in this app.
 
@@ -100,7 +113,7 @@ Understanding the ORM of our application is essential to leverage from the power
 
 For my flask application, the Entity Relationship Diagram visually represents the five entities and one junction table. A total of six entities will make the structure of the database. 
 
-![ERD-T2A2.]()
+![ERD-T2A2.](https://github.com/Marianne2109/T2A2/blob/main/docs/T2A2_ERD.png)
 
 These are:
 * **Staff = table name: staff:** This table stores information about staff members, including their role and access levels.
@@ -161,17 +174,17 @@ Based on the structure established in the ERD during the planning phase, the imp
 
 The Child model is the most important or the base model because of its relationship to several other models. The fields in the child model are id, name, date of birth, emergency contact 1 and emergency contact 2. This model has a relationship with Health Record and Daily checklist models, represented by the foreign key “child_id” in the Health Record and Daily Checklist tables. A child can have one Health record (one-to-one) and a child can have many daily checklists (one-to-many). The Child model does not have any foreign keys but serves as a foreign key (child_id) to the tables mentioned above. The foreign key ensures that the connection between tables remains consistent; for example, a health record or a daily checklist cannot reference a child that does not exist.
 
-![code snippet childclass]()
+![code snippet childclass](https://github.com/Marianne2109/T2A2/blob/main/docs/R7img1.png)
 
 In the code above, the primary key in the child model is defined by the id, we specify that name, dob and emergency contact 1 cannot be null. Next we define the relationship of the child model to other models, in this case the relationship to the Parent Guardian Child, Daily checklist and health record models. We also add an additional setting `cascade=all, delete-orphan`, so if a child instance is deleted the other attributes associated with that child will automatically be deleted. This efficiently handles changes in the database keeping the integrity of the data. 
 The Staff model relationship to the Daily checklist model is represented by the foreign key “entered_by” to connect with the staff member entering the data using the “staff_id”. This provides a way of tracking who made particular changes. The staff model does not have foreign key but it serves as a foreign key in the Daily checklist model.
 
-![code snippet]()
+![code snippet](https://github.com/Marianne2109/T2A2/blob/main/docs/R7img2.png)
 
 In the code we can see that entered_by is a foreign key connecting to the staff model by the staff_id attribute and that is set to not null, therefore, the staff id must be included, the logic is that the daily checklist must be completed by a staff, without a staff member the checklist cannot be completed. 
 The relationship between the Child and Parent Guardian models is many-to-many - parents can have many children and a child can have more than one parent. The relationship is facilitated by a junction table. 
 
-![snippet parent guardian child]()
+![snippet parent guardian child](https://github.com/Marianne2109/T2A2/blob/main/docs/R7img3.png)
 
  The junction table turns a many-to-many relationship into two one-to-many relationships. The foreign key referencing in the Parent Guardian Child model are the primary keys of the Child and Parent Guardian models. In my application I included an attribute for the relationship to the child, which is an attribute exclusive to the unique relationship between the child_id and the parent_guardian_id hence its located in the junction table. This adds to the flexibility and scalability of the Parent Guardian Child model.
 Because parents can have many children, in order to prevent data redundancy I added a UniqueConstraint so the relationship between one parent or guardian and one child remains unique. 
@@ -203,6 +216,9 @@ This route handles creation and registration of staff members. For the purpose o
   * Successfully created, 201: if successful a new staff member will be created and registered into the database 
   * Missing column, 409
   * Username not unique - error ”username already in use”
+ 
+![POST-auth-register](https://github.com/Marianne2109/T2A2/blob/main/docs/POST-auth-register.png)
+  
 
 ### Staff login - `POST - /auth/login`
 This route allows staff to login after registration
@@ -213,7 +229,7 @@ This route allows staff to login after registration
   * Successful login, 201: allows a staff to login, it returns username, is_admin (true or false) and token
   * Invalid username or password, 401
 
-
+![POST-auth-login](https://github.com/Marianne2109/T2A2/blob/main/docs/POST-auth_login.png)
 
 ### Delete staff - `DELETE - /auth/staffs/<int:staff_id>`
 Route to delete a staff member. Requires to be logged in as an admin. The staff_id to be deleted is passed through the route.
@@ -221,6 +237,8 @@ Route to delete a staff member. Requires to be logged in as an admin. The staff_
 * Response:
   * Successfully deleted, 200:
   * Staff id not found, 404
+
+![DELETE-auth](https://github.com/Marianne2109/T2A2/blob/main/docs/DELETE-auth-staff.png)
 
 ### Update staff - `PUT/PATCH - /auth/staffs/<int:staff_id>`
 This route allows updating a staff member's details. Requires to be logged in as an admin. 
@@ -234,6 +252,8 @@ This route allows updating a staff member's details. Requires to be logged in as
 * Response:
   * Successful update, 200: update intended fields and save changes into the database
   * Staff does not exist, 404
+ 
+![PUT/PATCH-auth](https://github.com/Marianne2109/T2A2/blob/main/docs/PATCH-auth-staff.png)
 
 
 ### Staff Routes 
@@ -244,12 +264,16 @@ This route was created to fetch all the staff members currently registered in th
 * Response:
   * Successful, 200: Returns the details of all staff members currently stored in the database
 
+![GET-staff](https://github.com/Marianne2109/T2A2/blob/main/docs/GET-all_staff.png)
+
 ### Get single staff - `GET - /staffs/<int:staff_id>`
 This route is to fetch the details of a particular staff member using the staff member id. Requires to be logged in as an admin.
 * Request body data: not required 
 * Response:
   * Successful, 200: Returns the details of a specific staff member.
   * Error, 404: Error message indicating staff member not found
+    
+![GET-staff](https://github.com/Marianne2109/T2A2/blob/main/docs/GET%20-%20staff_id.png)
 
 ### Child Routes 
 
@@ -259,12 +283,16 @@ This route is used to fetch all children from the database. Requires to be logge
 * Response:
   * Successful, 200: Returns the details of all children members currently stored in the database
 
+![GET-children](https://github.com/Marianne2109/T2A2/blob/main/docs/GET-all_children.png)
+
 ### Get a single child - `GET - /children/<int:child_id>`
 This route is used to fetch the information of a child based on the ID. Requires to be logged in as an admin.
 * Request body data: not required 
 * Response:
   * Successful, 200: Returns the details of the child.
   * Error, 404: returns error message “child not found”.
+  * 
+![GET-child](https://github.com/Marianne2109/T2A2/blob/main/docs/GET%20single%20child.png)
 
 ### Create child - `POST - /children`
 This route handles creation of a new child instance. Requires admin role to be logged in. 
@@ -275,6 +303,8 @@ This route handles creation of a new child instance. Requires admin role to be l
   * Emergency contact 2: Name of emergency contact 2
 * Response:
   * Successfully, 200: This will see a new child instance created and saved into the database
+ 
+![POST-child]()
 
 ### Delete child - `DELETE - /children/<int:child_id>`
 This route is used to delete child information. Requires to be logged in as an admin. The child_id to be deleted is passed through the route.
@@ -282,6 +312,8 @@ This route is used to delete child information. Requires to be logged in as an a
 * Response:
   * Successfully deleted, 200
   * Child id not found, 404
+
+![DELETE-child](https://github.com/Marianne2109/T2A2/blob/main/docs/DELETE%20child.png)
 
 ### Update child - `PUT, PATCH - /children/<int:child_id>`
 This route allows updating the information of a particular child. Requires to be logged in as an admin. 
@@ -293,6 +325,8 @@ This route allows updating the information of a particular child. Requires to be
 * Response:
   * Successful update, 200: the updated fields will be saved to the database
   * Child id not found, 404
+    
+![PUT/PATCH-child](https://github.com/Marianne2109/T2A2/blob/main/docs/PATCH%20child.png)
 
 ### ParentGuardian Routes 
 
@@ -300,6 +334,8 @@ This route allows updating the information of a particular child. Requires to be
 This route allows access to the details of a particular parent or guardian for a particular child. Required to be logged in as staff or admin 
 * Body request: not required 
 * Response: Returns the details of the parent or guardian
+
+![GET-parent](https://github.com/Marianne2109/T2A2/blob/main/docs/GET%20parent.png)
 
 ### Create parent or guardian - `POST - /children/<int:child_id>/parents_guardians`
 This route handles creation of a new parent or guardian for a particular child. Requires admin role to be logged in. 
@@ -310,6 +346,9 @@ This route handles creation of a new parent or guardian for a particular child. 
 * Response:
   * Successfully, 200: will create a new instance of the parent or guardian and saved it to the database 
   * Error,400: error message, child id not found
+ 
+![POST-parent](https://github.com/Marianne2109/T2A2/blob/main/docs/POST%20create%20parent.png)
+
 
 ### Delete parent or guardian - `DELETE - /children/<int:child:id>/parents_guardians/<int:parent_guardian_id>`
 This route allows deleting the record of a parent or guardian. Requires admin to be logged.
@@ -317,6 +356,9 @@ This route allows deleting the record of a parent or guardian. Requires admin to
 * Response:
   * Successful,201: parent or guardian successfully deleted
   * Error 404: Child id not found
+ 
+![DELETE-parent](https://github.com/Marianne2109/T2A2/blob/main/docs/DELETE-parent.png)
+
 
 ### Update parent guardian - `PUT, PATCH - /children/<int:child_id>/parents_guardians/<int:parent_guardian_id>`
 This route allows updating the parent or guardian details. It requires login as admin. 
@@ -326,7 +368,10 @@ This route allows updating the parent or guardian details. It requires login as 
   * phone
 * Response:
   * Successful: update attributes accordingly 
-  * Error 404, Returns error message, parent or guardian id not found. 
+  * Error 404, Returns error message, parent or guardian id not found.
+
+![DELETE-parent](https://github.com/Marianne2109/T2A2/blob/main/docs/PUT%20update%20parent.png)
+
 
 ### ParentGuardianChild Routes 
 
@@ -335,8 +380,13 @@ This route allows access to the details of a particular parent or guardian for a
 * Body request: not required 
 * Response: Returns the details of the parent or guardian
 
+
+![GET-parentchild]()
+
 **I spend tha majority of the time trying to debug the routes for POST, DELETE and PUT/PATCH. I could not get to retrieve the intended response. Possibly related to the schema, with a invalid input message. I tried everything and I kept on recieving errors. While it is not what is required in the question, I decided to copy my code and the Pseudocode as a way of explaining the logic used.** 
 
+
+![GET-parentchilderror]()
 
 ### Create parent guardian child relationship - POST 
 
@@ -458,6 +508,8 @@ This route allows the retrieval of the health record of a child. The role requir
 * Response:
   * Successful: it will return the information from the health record
   * Error: Health record id or child id not found.
+ 
+![GET-health record]()
 
 ### Create health record - `POST - /children/<int:child_id>/health_records`
 This route allows the creation of the health record for a child. It requires the role of admin to be created.
@@ -473,12 +525,16 @@ This route allows the creation of the health record for a child. It requires the
   * Successful, 201: if successful the data passed through the body of the request will be saved to the table in the database
   * Error, 404: if the child Id is not found
 
+![POST-health record](https://github.com/Marianne2109/T2A2/blob/main/docs/POST%20health%20record.png)
+
 ### Delete health record - `DELETE - /children/<int:child_id>/health_records/<int:health_record_id>`
 This route allows you to delete a health record for a child (child_id). It requires an admin role.
 * Body data request: Not required
 * Response:
   * Successful, returns message “Health record (health_record_id) deleted successfully”
   * Error, 404: returns error message “Child (id) not found”
+ 
+![DELETE-health record](https://github.com/Marianne2109/T2A2/blob/main/docs/DELETE%20health%20record.png)
 
 ### Edit health  record - `PUT, PATCH - /children/<int:child_id>/health_records/<int:health_records_id>`
 The purpose of this route is to edit the details of a child's health record. It requires admin authorisation level to perform the changes. 
@@ -494,13 +550,17 @@ The purpose of this route is to edit the details of a child's health record. It 
   * Successful, 201: Returns the data reflecting field changes in the table saved into the database 
   * Error, 404: Returns error message “Health record for child id not found”
 
+![EDIT-health record](https://github.com/Marianne2109/T2A2/blob/main/docs/PUT-health%20record.png)
+
 ### Dailychecklist Routes
 
 ### Get all daily checklists for a particular child  - `GET - /children/<int:child_id>/daily_checklists`
 This route has the intended purpose of retrieving all daily checklists for a particular child. Given that while developing this project, the tables were dropped several times along the way therefore there is no record of previous daily checklists other than the ones seeded into the project for testing purposes. I have no reason to believe that this route wouldn’t work as intended. 
 * Request body data: not required.
 * Response: 
-  * Successful: returns the checklists for a particular child id. 
+  * Successful: returns the checklists for a particular child id.
+ 
+![GET-checklist](https://github.com/Marianne2109/T2A2/blob/main/docs/GET-particular_checklist.png)
 
 ### Get a daily checklist for a child for a particular date - `GET - /children/<int:child_id>/daily_checklists/filter_date?date=<int:dateYYYY-MM-DD>`
 This route is created with the purpose of retrieving a daily checklist for a particular child (child_id) by a particular date. Using a pre-filter method passed through the URL is possible to access a table based on a specific value, in this case, the date.  Both staff and admin have the required authorisation to action this. 
@@ -508,6 +568,8 @@ This route is created with the purpose of retrieving a daily checklist for a par
 * Response:
   * Successful: a successful response will see the retrieval of a particular daily checklist based on the date. Similar to the previous request, because the tables were dropped several times during the development stage I don’t have other data other than what’s been seeded into the database. The parameters  in the code are set for date.today for all new records
   * Error, 400: Returns error message “Daily checklist for child (child_id) for date (date_required) not found”
+ 
+![GET-checklist](https://github.com/Marianne2109/T2A2/blob/main/docs/GET-daily_checklist_by_date.png)
 
 ### Create daily checklist - `POST - /children/<int:child_id>/daily_checklists`
 The purpose of this route is to create a daily checklist for a child. The date for each recorded date is set as date.today() so there is not need to enter that parameter when completing the checklist. Both staff and admin can create a new checklist.
@@ -525,6 +587,8 @@ The purpose of this route is to create a daily checklist for a child. The date f
 * Response:
   * Successful: a successful response will see the information passed in the body request saved into the table in the database. We’ll see the data displayed adding fields like child_id, daily_checklist_id and entered_by indicating the staff member who completed the checklist.
   * Error, 400: Returns error message “Daily checklist for child (child_id) for date (date_required) not found”
+ 
+![POST-checklist](https://github.com/Marianne2109/T2A2/blob/main/docs/POST-checklist.png)
 
 ### Delete daily checklist - `DELETE - /children/<int:child_id>/daily_checklists/<int:daily_checklists_id>`
 This route purpose is to delete daily checklists associated with a child id. It requires admin authorisation. 
@@ -532,6 +596,8 @@ This route purpose is to delete daily checklists associated with a child id. It 
 * Response:
   * Successful: a successful request will see a daily checklist deleted and a message displayed “Daily checklist deleted successfully”
   * Error: if not successful a message will be displayed “daily checklist (id) not found
+ 
+  ![DELETE-checklist](https://github.com/Marianne2109/T2A2/blob/main/docs/DELETE-daily_checklist.png)
 
 ### Update daily checklist - `PUT, PATCH - /children/<int:child_id>/daily_checklists/<int:daily_checklists_id>`
 This route deals with editing or updating a daily checklist. Admin and staff have authorisation to perform updates.
@@ -548,6 +614,8 @@ This route deals with editing or updating a daily checklist. Admin and staff hav
 * Response:
   * Successful: a successful response will see the information from the body of the request, updated and saved to the database. 
   * Error, 400: Returns error message “Daily checklist for child (child_id) not found”
+ 
+![PUT/PATCH-checklist]()
 
 ## Reference list
 1. 2.4. Populating a Table With Rows 2024, PostgreSQL Documentation.
