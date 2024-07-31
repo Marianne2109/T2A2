@@ -304,7 +304,7 @@ This route handles creation of a new child instance. Requires admin role to be l
 * Response:
   * Successfully, 200: This will see a new child instance created and saved into the database
  
-![POST-child]()
+![POST-child](https://github.com/Marianne2109/T2A2/blob/main/docs/POST%20create%20child.png)
 
 ### Delete child - `DELETE - /children/<int:child_id>`
 This route is used to delete child information. Requires to be logged in as an admin. The child_id to be deleted is passed through the route.
@@ -381,12 +381,12 @@ This route allows access to the details of a particular parent or guardian for a
 * Response: Returns the details of the parent or guardian
 
 
-![GET-parentchild]()
+![GET-parentchild](https://github.com/Marianne2109/T2A2/blob/main/docs/parent_guardian_child_GET.png)
 
 **I spend tha majority of the time trying to debug the routes for POST, DELETE and PUT/PATCH. I could not get to retrieve the intended response. Possibly related to the schema, with a invalid input message. I tried everything and I kept on recieving errors. While it is not what is required in the question, I decided to copy my code and the Pseudocode as a way of explaining the logic used.** 
 
 
-![GET-parentchilderror]()
+![POST-parentchilderror](https://github.com/Marianne2109/T2A2/blob/main/docs/parent_guardian_child_POST_bad.png)
 
 ### Create parent guardian child relationship - POST 
 
@@ -509,7 +509,7 @@ This route allows the retrieval of the health record of a child. The role requir
   * Successful: it will return the information from the health record
   * Error: Health record id or child id not found.
  
-![GET-health record]()
+![GET-health record](https://github.com/Marianne2109/T2A2/blob/main/docs/GET%20health%20record.png)
 
 ### Create health record - `POST - /children/<int:child_id>/health_records`
 This route allows the creation of the health record for a child. It requires the role of admin to be created.
@@ -615,7 +615,7 @@ This route deals with editing or updating a daily checklist. Admin and staff hav
   * Successful: a successful response will see the information from the body of the request, updated and saved to the database. 
   * Error, 400: Returns error message “Daily checklist for child (child_id) not found”
  
-![PUT/PATCH-checklist]()
+![PUT/PATCH-checklist](https://github.com/Marianne2109/T2A2/blob/main/docs/PATCH%20checklist.png)
 
 ## Reference list
 1. 2.4. Populating a Table With Rows 2024, PostgreSQL Documentation.
