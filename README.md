@@ -1,10 +1,10 @@
 # API Web Server Application
 
 ## Link
-- GitHub repo:
-- Trello board: ![Trello](https://trello.com/b/zp0dHkrS/a2t2-api-webserver)
+- GitHub repo: 
+- Trello board: [Trello](https://trello.com/b/zp0dHkrS/a2t2-api-webserver)
   
-###How to use
+### How to use
 To operate this application follow the next steps:
 1. Open the src folder in the Terminal
 2. Create and launch a virtual enviroment for the application with the following command
@@ -24,8 +24,10 @@ To operate this application follow the next steps:
 6. Create a .env file in the root directory and copy the variables from .envsample file into it
  * Set your own secret key, database URL with childcare_db and the username staff_childcare on your machine
    
-    ```DATABASE_URI= "postgresql+psycopg2://{your_postgres_user}:{passowrd_of_user}@localhost:5000/{your_database}"
-     JWT_SECRET_KEY="secret" ```
+    ```
+    DATABASE_URI= "postgresql+psycopg2://{your_postgres_user}:{passowrd_of_user}@localhost:5000/{your_database}"
+     JWT_SECRET_KEY="secret"
+    ```
     
 7. To create the database run `flask db create`
 8. To seed the data from CLI commands into the database run `flask db seed`
@@ -41,7 +43,7 @@ This app will create a keep record for each child's details, their carers detail
 Child Care Centers of varying sizes use third party softwares to support the management of the centre and to collect data that can be used for mandatory reporting to the State or Territory and Federal Government. The use of these platforms has a significant cost that at times small centres struggle to cover. Having a simple web application can assist with the overall efficiency of the centres’ management while assisting with data collection and data that can be extrapolated and used to secure funding (“Early Childhood Education and Care: Unit record level NMDS 2021)
 
 ## R2. Describe the way tasks are allocated and tracked in your project. 
-For project management and task tracking I used ![Trello](https://trello.com/b/zp0dHkrS/a2t2-api-webserver)
+For project management and task tracking I used [Trello](https://trello.com/b/zp0dHkrS/a2t2-api-webserver)
 I divided the tasks into 5 categories:
 * Backlog
 * To do
@@ -51,6 +53,17 @@ I divided the tasks into 5 categories:
 
 For each category I created cards and checklists within. The process was fluid and when I identified the need some elements in the checklists were transformed into its own card. I regularly updated these cards and checklists by adding items or ticking and unticking as I progressed through each task. I also made comments when needed to keep track of the progress or blocks along the way. At times I worked across elements in different cards which I expected to happen given that I was working by myself. I often referred back to the trello board to check for progress and task management.
 I used a Kanban template from Trello that I edited to suit my project needs. Some of examples of the cards created in the photos below.
+
+![Trello Board](https://github.com/Marianne2109/T2A2/blob/main/docs/Trello%20.png)
+
+
+![Trello Models](https://github.com/Marianne2109/T2A2/blob/main/docs/trello%20create%20models.png)
+
+
+![Trello Board](https://github.com/Marianne2109/T2A2/blob/main/docs/Trello%20-%20create%20controllers%20card.png)
+
+
+![Trello Board](https://github.com/Marianne2109/T2A2/blob/main/docs/trello%20-done.png)
 
 ## R3. List and explain the third-party services, packages and dependencies used in this app.
 
