@@ -28,14 +28,9 @@ class HealthRecordSchema(ma.Schema):
        allergies = fields.String(validate=Length(max=50))
        health_condition = fields.String(validate=Length(max=50))
        GP = fields.String(validate=Length(max=50))
-       medicare_number = fields.String(validate=Regexp(r'^\d{10} \d$', error="Medicare number must be in format '1234567890 1' or 'na'"))
+       medicare_number = fields.String(validate=Regexp("^[0-9 ]+$", error="Medicare number must be in numeric format '1234567890 1' or 'na'"))
        ambulance_cover = fields.String() 
        
-       #add validate decorator, created to validate medicare card input format. Implemented locally as it is only used in for health record model
-       @validates("medicare_number")
-       def validate_medicare_number(self, value):
-            if value != "na" and not Regexp(r'^\d{10} \d$').match(value):
-                raise ValidationError("Medicare number must be in format '1234567890 1' or 'na'")
                
        class Meta:
            fields = ("id", "child_id", "immunisation_status", "allergies", "health_condition", "GP", "medicare_number", "ambulance_cover")

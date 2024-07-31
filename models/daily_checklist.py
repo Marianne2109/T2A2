@@ -10,7 +10,7 @@ class Dailychecklist(db.Model):
      
     id = db.Column(db.Integer, primary_key=True)
     child_id = db.Column(db.Integer, db.ForeignKey("child.id"), nullable=False) #must belong to a child
-    date = db.Column(db.Date, default=date.today, nullable=False)
+    date = db.Column(db.Date, nullable=False)
     sunscreen = db.Column(db.String) #Ex. Applied am, applied pm, na
     sleep = db.Column(db.String) #Ex. 1 hour, half hour
     nappies = db.Column(db.String) #Ex. wet nappy changed, soiled nappy changed
@@ -29,7 +29,7 @@ class Dailychecklist(db.Model):
     #define relationship to staff table
     staff = db.relationship("Staff", back_populates="daily_checklists")
 
-alphanumeric = Regexp("^[a-zA-Z0-9 ]+$", error="Include only letter and numbers.")   
+alphanumeric = Regexp("^[a-zA-Z0-9 \.\,\!\?\'\"\-]+$", error="Include only letter and numbers.")   
     
 #create daily_checklist schema
 class DailychecklistSchema(ma.Schema):
@@ -38,9 +38,8 @@ class DailychecklistSchema(ma.Schema):
     staff = fields.Nested("StaffSchema", only=["name"])
     
     sunscreen = fields.String(required=True, validate=And(
-                              Length(max=15, error="Number of characters exceed the limit [15 characters]"), alphanumeric))
-    sleep = fields.String(required=True, validate=And(
-                              Length(max=15, error="Number of characters exceed the limit [15 characters]"), alphanumeric))
+                              Length(max=15, error="Number of characters exceed the limit [15characters]"), alphanumeric))
+    sleep = fields.String(required=True)
     nappies = fields.String(required=True, validate=And(
                               Length(max=20, error="Number of characters exceed the limit [20 characters]"), alphanumeric))
     bottles = fields.String(required=True, validate=And(

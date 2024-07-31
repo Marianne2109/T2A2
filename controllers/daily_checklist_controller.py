@@ -50,7 +50,7 @@ def get_daily_checklist(child_id):
     if daily_checklist:
         return daily_checklist_schema.dump(daily_checklist), 200
     else:
-        return {"error": f"No checklist found for child '{child_id}' on date '{filter_date}'"}
+        return {"error": f"No checklist found for child '{child_id}' on date '{filter_date}'"},400
         
 #POST - /<int:child_id>/daily_checklists - create a new daily checklist
 @daily_checklists_bp.route("/", methods=["POST"])
