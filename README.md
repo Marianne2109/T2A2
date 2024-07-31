@@ -1,7 +1,7 @@
 # API Web Server Application
 
 ## Link
-- GitHub repo: 
+- GitHub repo: [GitHub Repo](https://github.com/Marianne2109/T2A2)
 - Trello board: [Trello](https://trello.com/b/zp0dHkrS/a2t2-api-webserver)
   
 ### How to use
