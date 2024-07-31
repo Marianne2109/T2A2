@@ -2,7 +2,35 @@
 
 ## Link
 - GitHub repo:
-- Trello board:
+- Trello board: ![Trello](https://trello.com/b/zp0dHkrS/a2t2-api-webserver)
+  
+###How to use
+To operate this application follow the next steps:
+1. Open the src folder in the Terminal
+2. Create and launch a virtual enviroment for the application with the following command
+  
+   `python3 -m venv .venv && source .venv/bin/activate`
+
+3. Clone this repository on your local machine
+4. If it's not already installed, install PostgreSQL
+ * Run PostgreSQL 
+ * Create a database in PostgreSQL. I used _childcare_db_
+ * Create a user called named as you like. I used _staff_childcare_ 
+ * Grant all database privileges to the newly created user
+5. Install the required libraries for the API into the virtual environment using the following command
+   
+    `pip3 install -r requirements.txt`
+   
+6. Create a .env file in the root directory and copy the variables from .envsample file into it
+ * Set your own secret key, database URL with childcare_db and the username staff_childcare on your machine
+   
+    ```DATABASE_URI= "postgresql+psycopg2://{your_postgres_user}:{passowrd_of_user}@localhost:5000/{your_database}"
+     JWT_SECRET_KEY="secret" ```
+    
+7. To create the database run `flask db create`
+8. To seed the data from CLI commands into the database run `flask db seed`
+9. To run the application use `flask run`
+10. To delete the tables and reset the database run `flask db drop`
 
 ## R1. Explain the problem that this app will solve and explain how this app solves or addresses the problem. 
 For this project, I am creating a basic API web application for the Management of a Childcare Center. 
@@ -13,7 +41,7 @@ This app will create a keep record for each child's details, their carers detail
 Child Care Centers of varying sizes use third party softwares to support the management of the centre and to collect data that can be used for mandatory reporting to the State or Territory and Federal Government. The use of these platforms has a significant cost that at times small centres struggle to cover. Having a simple web application can assist with the overall efficiency of the centres’ management while assisting with data collection and data that can be extrapolated and used to secure funding (“Early Childhood Education and Care: Unit record level NMDS 2021)
 
 ## R2. Describe the way tasks are allocated and tracked in your project. 
-For project management and task tracking I used Trello LINK
+For project management and task tracking I used ![Trello](https://trello.com/b/zp0dHkrS/a2t2-api-webserver)
 I divided the tasks into 5 categories:
 * Backlog
 * To do
@@ -21,8 +49,8 @@ I divided the tasks into 5 categories:
 * Testing
 * Done
 
-For each category I created cards and checklists within. The process was fluid and when I identified the need some elements in the checklists were transformed into its own card. I regularly updated these cards and checklists by adding items or ticking and unticking as I progressed through each task. I also made comments when needed to keep track of the progress or blocks along the way. At times I worked over items across different cards which I expected to happen given that I was working by myself. 
-I used a Kanban template from Trello that I edited to suit my project needs. Some of examples of the cards created:
+For each category I created cards and checklists within. The process was fluid and when I identified the need some elements in the checklists were transformed into its own card. I regularly updated these cards and checklists by adding items or ticking and unticking as I progressed through each task. I also made comments when needed to keep track of the progress or blocks along the way. At times I worked across elements in different cards which I expected to happen given that I was working by myself. I often referred back to the trello board to check for progress and task management.
+I used a Kanban template from Trello that I edited to suit my project needs. Some of examples of the cards created in the photos below.
 
 ## R3. List and explain the third-party services, packages and dependencies used in this app.
 
@@ -176,7 +204,6 @@ This route handles creation and registration of staff members. For the purpose o
   * Missing column, 409
   * Username not unique - error ”username already in use”
 
-
 ### Staff login - `POST - /auth/login`
 This route allows staff to login after registration
 * Request body data:
@@ -217,7 +244,7 @@ This route was created to fetch all the staff members currently registered in th
 * Response:
   * Successful, 200: Returns the details of all staff members currently stored in the database
 
-### Get single staff - `GET - /staffs/<int:staff_id>``
+### Get single staff - `GET - /staffs/<int:staff_id>`
 This route is to fetch the details of a particular staff member using the staff member id. Requires to be logged in as an admin.
 * Request body data: not required 
 * Response:
@@ -232,7 +259,7 @@ This route is used to fetch all children from the database. Requires to be logge
 * Response:
   * Successful, 200: Returns the details of all children members currently stored in the database
 
-### Get a single child - `GET - /children/<int:child_id>``
+### Get a single child - `GET - /children/<int:child_id>`
 This route is used to fetch the information of a child based on the ID. Requires to be logged in as an admin.
 * Request body data: not required 
 * Response:
