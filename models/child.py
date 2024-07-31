@@ -37,7 +37,7 @@ class ChildSchema(ma.Schema):
     
     #add validation for length and alphanumeric values for name 
     name = fields.String(required=True, validate=And(
-                         Length(min=3, error="Name must be at least three characters long"), 
+                         Length(min=3, error="Name must be at least three characters long"),
                          Regexp("^[a-zA-Z0-9 ]+$", error="Name must contain alphanumeric characters only")
                          ))
     #add validation for dob, date should not be in the future

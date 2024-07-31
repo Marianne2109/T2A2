@@ -15,7 +15,7 @@ class ParentGuardianChild(db.Model):
     #adding UniqueConstraint method to avoid data duplication and ensuring that child-parent_guardian relationship remains unique
     __table_args__ = (db.UniqueConstraint("child_id", "parent_guardian_id", name="_child_parent_uc"),)
     
-    #define relationship to child table and parent_guardian table (SINGULAR)
+    #define relationship to child table and parent_guardian table 
     child = db.relationship("Child", back_populates="parents_guardians_children")
     parent_guardian = db.relationship("ParentGuardian", back_populates="parents_guardians_children")
 
@@ -24,9 +24,7 @@ class ParentGuardianChildSchema(ma.Schema):
     #nested fields to include fields from the related schemas - in this case name only 
     child = fields.Nested("ChildSchema", only=["name"], required=True)
     parent_guardian = fields.Nested("ParentGuardianSchema", only=["name"], required=True)
-    
-    id = ma.auto_field()
-    child_id = ma.auto_field()
+
     #add length validation for relationship to child
     relationship_to_child = fields.String(required=True, validate=Length(min=3))
     

@@ -16,7 +16,7 @@ parents_guardians_bp = Blueprint("parents_guardians", __name__, url_prefix="/chi
 @parents_guardians_bp.route("/", methods=["POST"])
 @jwt_required()
 @role_required("admin")
-def create_parent_guardian(child_id):
+def create_parent_guardian_child_relationship(child_id):
     body_data = parent_guardian_schema.load(request.get_json())
     #fetch child with particular id - child_id
     stmt = db.select(Child).filter_by(id=child_id)
